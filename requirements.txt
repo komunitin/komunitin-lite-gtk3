@@ -1,0 +1,6 @@
+# These requirements are already installed by default in many 
+# current GNU/Linux distributions (04/2020). To check it:
+# pip3 list | grep "PyGObject\|requests"
+
+PyGObject>=3.36.0
+requests>=2.22.0

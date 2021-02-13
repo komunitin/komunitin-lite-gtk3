@@ -27,4 +27,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--terminal" in sys.argv:
+        main()
+    else:
+        from gtk3.application import Application
+        app = Application()
+        app.run(sys.argv)

@@ -2,24 +2,62 @@ import requests
 from .oauth2 import BASE_URL, KomunitinNetError
 
 
-def get_account_info(headers):
-    me_url = BASE_URL + "/ces/api/social/users/me?include=account"
-    acc_url = BASE_URL + "/ces/api/accounting/accounts?filter&account={}"
-    account_id = ""
+def get_user_accounts(headers):
+    me_url = BASE_URL + \
+      "/ces/api/social/users/me?include=members,members.account,members.group"
+    members = []
+    groups = []
     accounts = []
-
-    resp1 = requests.get(me_url, headers=headers)
-    if resp1.status_code == 200:
-        user_info = resp1.json()
-        account_id = user_info['data']['id']
+    resp = requests.get(me_url, headers=headers)
+    if resp.status_code == 200:
+        user_info = resp.json()
+        for data in user_info['included']:
+            if data['type'] == "members":
+                member_data = data["attributes"]
+                member_data["id"] = data["id"]
+                members.append(member_data)
+            elif data['type'] == "accounts":
+                accounts.append({
+                    "id": data["id"],
+                    "link": data["links"]["self"]
+                })
+            elif data['type'] == "groups":
+                groups_data = data["attributes"]
+                groups_data["id"] = data["id"]
+                groups.append(groups_data)
     else:
-        print("Error %s: %s" % (resp1.status_code, resp1.text))
-        raise KomunitinNetError(resp1.text, resp1.status_code)
+        print("Error %s: %s" % (resp.status_code, resp.text))
+        raise KomunitinNetError(resp.text, resp.status_code)
 
-    if account_id:
-        resp2 = requests.get(acc_url.format(account_id), headers=headers)
-        if resp2.status_code == 200:
-            accounts_info = resp2.json()
-            accounts = [acc['id'] for acc in accounts_info['data']]
+    return members, accounts, groups
 
-    return accounts[0] if accounts else account_id
+
+def get_account_balance(headers, group, account):
+    acc_url = BASE_URL + \
+      "/ces/api/accounting/{}/accounts/{}"
+    resp = requests.get(acc_url.format(group, account), headers=headers)
+    if resp.status_code == 200:
+        account_info = resp.json()
+
+        balance = account_info["data"]["attributes"]["balance"]
+        return balance
+    else:
+        print("Error %s: %s" % (resp.status_code, resp.text))
+        raise KomunitinNetError(resp.text, resp.status_code)
+
+
+def get_account_statement(headers, group, account_id):
+    trans_url = BASE_URL + \
+      "/ces/api/accounting/{}/transfers?filter[account]={}"
+    transfers = []
+    resp = requests.get(trans_url.format(group, account_id), headers=headers)
+    if resp.status_code == 200:
+        trans_info = resp.json()
+        for trans in trans_info["data"]:
+            if trans["type"] == "transfers":
+                transfers.append(trans)
+        return transfers
+    else:
+        print("Error %s: %s" % (resp.status_code, resp.text))
+        raise KomunitinNetError(resp.text, resp.status_code)
+

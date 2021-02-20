@@ -96,7 +96,7 @@ class ApiAccess:
         }
         response = requests.post(token_url, params, timeout=5)
         if response.status_code == 200:
-            print("token refreshed")
+            print("Token refreshed", end='\r', flush=True)
             self.has_access = True
             self._auth = response.json()
             self.headers = self._make_headers(self._auth['access_token'])

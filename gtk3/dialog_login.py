@@ -5,8 +5,8 @@ from gi.repository import Gtk
 
 
 class DialogLogin(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, title="Login", transient_for=parent, flags=0)
+    def __init__(self, parent, access):
+        Gtk.Dialog.__init__(self, title="Login", transient_for=parent)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         vbox.set_homogeneous(False)

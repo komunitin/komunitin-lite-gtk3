@@ -34,13 +34,15 @@ def get_user_accounts(headers):
 
 def get_account_balance(headers, group, account):
     acc_url = BASE_URL + \
-      "/ces/api/accounting/{}/accounts/{}"
+      "/ces/api/accounting/{}/accounts/{}?include=currency"
     resp = requests.get(acc_url.format(group, account), headers=headers)
     if resp.status_code == 200:
         account_info = resp.json()
 
         balance = account_info["data"]["attributes"]["balance"]
-        return balance
+        currency = account_info["included"][0]["attributes"]
+        currency["id"] = account_info["included"][0]["id"]
+        return balance, currency
     else:
         print("Error %s: %s" % (resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)

@@ -1,4 +1,4 @@
-import sys, getpass
+import sys, getpass, datetime
 
 from utils.oauth2 import ApiAccess
 from utils.api_services import get_user_accounts, get_account_balance
@@ -35,12 +35,12 @@ def command_line_interface():
     print("Account: {}".format(members[0]["code"]) + " "*10)
     print("Getting account info...", end='\r', flush=True)
     try:
-        balance = get_account_balance(access.headers,
+        balance, currency = get_account_balance(access.headers,
                                       groups[0]["code"], members[0]["code"])
     except Exception as e:
         print(str(e))
         sys.exit()
-    print("Balance: {}".format(balance) + " "*10)
+    print("Balance: {} {}".format(balance, currency["symbol"]) + " "*10)
     print("Getting last transactions...", end='\r', flush=True)
     try:
         transfers = get_account_statement(access.headers, groups[0]["code"],
@@ -49,7 +49,11 @@ def command_line_interface():
         print(str(e))
         sys.exit()
     for trans in transfers:
-        print("{}| {}".format(
+        created = datetime.datetime.fromisoformat(
+            transfers[0]["attributes"]["created"])
+        amount = str(trans["attributes"]["amount"]) + " " + currency["symbol"]
+        print("{}| {}| {}".format(
+            created.strftime("%d/%m/%Y").ljust(10),
             trans["attributes"]["meta"].ljust(40),
-            str(trans["attributes"]["amount"]).ljust(10)
+            amount.ljust(10)
         ))

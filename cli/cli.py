@@ -35,22 +35,22 @@ def command_line_interface():
     print("Account: {}".format(members[0]["code"]) + " "*10)
     print("Getting account info...", end='\r', flush=True)
     try:
-        balance, currency = get_account_balance(access.headers,
-                                      groups[0]["code"], members[0]["code"])
+        balance, currency = get_account_balance(
+            access.headers, groups[0]["code"], members[0]["code"])
     except Exception as e:
         print(str(e))
         sys.exit()
     print("Balance: {} {}".format(balance, currency["symbol"]) + " "*10)
     print("Getting last transactions...", end='\r', flush=True)
     try:
-        transfers = get_account_statement(access.headers, groups[0]["code"],
-                                           accounts[0]["id"])
+        transfers = get_account_statement(
+            access.headers, groups[0]["code"], accounts[0]["id"])
     except Exception as e:
         print(str(e))
         sys.exit()
     for trans in transfers:
         created = datetime.datetime.fromisoformat(
-            transfers[0]["attributes"]["created"])
+            trans["attributes"]["created"])
         amount = str(trans["attributes"]["amount"]) + " " + currency["symbol"]
         print("{}| {}| {}".format(
             created.strftime("%d/%m/%Y").ljust(10),

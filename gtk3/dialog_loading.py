@@ -28,7 +28,8 @@ class DialogLoading(Gtk.Dialog):
         box.add(vbox)
         self.show_all()
 
-        thread = threading.Thread(target=self.get_new_data, args=(self.headers,))
+        thread = threading.Thread(target=self.get_new_data,
+                                  args=(self.headers,))
         thread.daemon = True
         thread.start()
 
@@ -43,11 +44,16 @@ class DialogLoading(Gtk.Dialog):
             GLib.idle_add(self.error_getting_data, e)
 
         GLib.idle_add(self.fill_with_new_data, members, accounts, groups,
-                                                balance, transfers)
+                      balance, currency, transfers)
 
     def fill_with_new_data(self, members, accounts, groups,
-                           balance, transfers):
-        print("Succesful getting data")
+                           balance, currency, transfers):
+        self.parent.members = members
+        self.parent.accounts = accounts
+        self.parent.groups = groups
+        self.parent.balance = balance
+        self.parent.currency = currency
+        self.parent.transfers = transfers
         self.destroy()
 
     def error_getting_data(self, e):

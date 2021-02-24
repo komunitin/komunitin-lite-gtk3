@@ -2,6 +2,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
+from gtk3.dialog_login import DialogLogin
+from gtk3.dialog_loading import DialogLoading
+
 
 class AppWindow(Gtk.ApplicationWindow):
 
@@ -42,11 +45,16 @@ class AppWindow(Gtk.ApplicationWindow):
 
         self.add(vbox)
 
-    def authenticate(self):
-        print("No access yet")
+    def show_dialog_login(self):
+        self.dialog_login = DialogLogin(self, self.access)
+        self.dialog_login.set_modal(True)
+        self.dialog_login.connect("destroy",
+                                  lambda x: self.show_dialog_loading())
 
-    def fill_with_new_data(self):
-        print("Get data")
+    def show_dialog_loading(self):
+        self.dialog_loading = DialogLoading(self, self.access)
+        self.dialog_loading.set_modal(True)
+        self.dialog_loading.set_decorated(False)
 
     def on_account_combo_changed(self, combo):
         pass

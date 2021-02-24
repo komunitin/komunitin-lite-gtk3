@@ -6,7 +6,6 @@ from gi.repository import Gtk
 
 from gtk3.window import AppWindow
 from gtk3.menu import MENU_XML
-from gtk3.dialog_login import DialogLogin
 from utils.oauth2 import ApiAccess
 
 
@@ -40,8 +39,9 @@ class Application(Gtk.Application):
             self.add_window(self.window)
         self.window.show_all()
         if not self.access.has_access:
-            self.dialog = DialogLogin(self.window, self.access)
-            self.dialog.set_modal(True)
+            self.window.show_dialog_login()
+        else:
+            self.window.show_dialog_loading()
 
     def on_about(self, action, param):
         pass

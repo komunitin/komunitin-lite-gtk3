@@ -59,11 +59,12 @@ class AppWindow(Gtk.ApplicationWindow):
                                   lambda x: self.show_dialog_loading())
 
     def show_dialog_loading(self):
-        self.dialog_loading = DialogLoading(self, self.access)
-        self.dialog_loading.set_modal(True)
-        self.dialog_loading.set_decorated(False)
-        self.dialog_loading.connect("destroy",
-                                    lambda x: self.fill_with_data())
+        if self.access.has_access:
+            self.dialog_loading = DialogLoading(self, self.access)
+            self.dialog_loading.set_modal(True)
+            self.dialog_loading.set_decorated(False)
+            self.dialog_loading.connect("destroy",
+                                        lambda x: self.fill_with_data())
 
     def fill_with_data(self):
         if self.members:

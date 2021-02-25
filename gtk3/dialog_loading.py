@@ -14,18 +14,13 @@ class DialogLoading(Gtk.Dialog):
         self.parent = parent
         self.headers = access.headers
 
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+        builder = Gtk.Builder()
+        builder.add_from_file("gtk3/glade/dialog_loading.glade")
+        self.main_box = builder.get_object("MainBox")
+        self.label_error = builder.get_object("LabelError")
 
-        self.label_error = Gtk.Label(label="Loading data...")
-        vbox.pack_start(self.label_error, True, True, 0)
-
-        spinner = Gtk.Spinner()
-        spinner.start()
-        vbox.pack_start(spinner, True, True, 0)
-
-        self.set_default_size(200, 200)
         box = self.get_content_area()
-        box.add(vbox)
+        box.add(self.main_box)
         self.show_all()
 
         thread = threading.Thread(target=self.get_new_data,
@@ -57,6 +52,6 @@ class DialogLoading(Gtk.Dialog):
         self.destroy()
 
     def error_getting_data(self, e):
-        self.label.set_text("Error getting data")
+        self.label_error.set_text("Error getting data")
         print("Error getting data")
         print(str(e))

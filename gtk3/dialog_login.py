@@ -7,42 +7,23 @@ from gi.repository import Gtk, GLib
 
 class DialogLogin(Gtk.Dialog):
     def __init__(self, parent, access):
-        Gtk.Dialog.__init__(self, title="Login", transient_for=parent)
+        Gtk.Dialog.__init__(self, title="demo.integralces.net",
+                            transient_for=parent)
         self.parent = parent
         self.access = access
         self.user = access.user
 
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        hbox_top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        hbox_top.set_homogeneous(True)
-        hbox_med = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        hbox_med.set_homogeneous(True)
-        hbox_bot = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        hbox_bot.set_homogeneous(False)
-
-        vbox.pack_start(hbox_top, True, True, 0)
-        vbox.pack_start(hbox_med, True, True, 0)
-        vbox.pack_start(hbox_bot, True, True, 0)
-
-        label_user = Gtk.Label(label="Email:")
-        hbox_top.pack_start(label_user, True, True, 0)
-
-        self.entry_user = Gtk.Entry()
+        builder = Gtk.Builder()
+        builder.add_from_file("gtk3/glade/dialog_login.glade")
+        self.main_box = builder.get_object("MainBox")
+        self.entry_user = builder.get_object("EntryUser")
         self.entry_user.set_text(self.user)
-        hbox_top.pack_start(self.entry_user, True, True, 20)
-
-        label_pswd = Gtk.Label(label="Password:")
-        hbox_med.pack_start(label_pswd, False, True, 0)
-        self.entry_pswd = Gtk.Entry()
-        self.entry_pswd.set_visibility(False)
-        hbox_med.pack_start(self.entry_pswd, False, True, 20)
-
-        button_login = Gtk.Button.new_with_label("Log in")
+        self.entry_pswd = builder.get_object("EntryPassword")
+        button_login = builder.get_object("ButtonLogin")
         button_login.connect("clicked", self.button_login_clicked)
-        hbox_bot.pack_end(button_login, False, False, 20)
 
         box = self.get_content_area()
-        box.add(vbox)
+        box.add(self.main_box)
         self.show_all()
 
     def button_login_clicked(self, button):

@@ -5,32 +5,19 @@ MENU_XML = """
   <menu id="app-menu">
     <section>
       <item>
-        <attribute name="action">win.change_label</attribute>
-        <attribute name="target">String 1</attribute>
-        <attribute name="label" translatable="yes">New user</attribute>
+        <attribute name="action">app.new_user</attribute>
+        <attribute name="label" translatable="yes">_New user</attribute>
       </item>
       <item>
-        <attribute name="action">win.change_label</attribute>
-        <attribute name="target">String 2</attribute>
-        <attribute name="label" translatable="yes">Change server</attribute>
+        <attribute name="action">app.make_transfer</attribute>
+        <attribute name="label" translatable="yes">_Make transfer</attribute>
       </item>
       <item>
-        <attribute name="action">win.change_label</attribute>
-        <attribute name="target">String 3</attribute>
-        <attribute name="label" translatable="yes">Network data</attribute>
+        <attribute name="action">app.preferences</attribute>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
       </item>
     </section>
     <section>
-      <item>
-        <attribute name="action">win.maximize</attribute>
-        <attribute name="label" translatable="yes">Maximize</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="action">app.about</attribute>
-        <attribute name="label" translatable="yes">_About</attribute>
-      </item>
       <item>
         <attribute name="action">app.quit</attribute>
         <attribute name="label" translatable="yes">_Quit</attribute>

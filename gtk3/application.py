@@ -22,8 +22,14 @@ class Application(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
-        action = Gio.SimpleAction.new("about", None)
-        action.connect("activate", self.on_about)
+        action = Gio.SimpleAction.new("new_user", None)
+        action.connect("activate", self.new_user)
+        self.add_action(action)
+        action = Gio.SimpleAction.new("make_transfer", None)
+        action.connect("activate", self.make_transfer)
+        self.add_action(action)
+        action = Gio.SimpleAction.new("preferences", None)
+        action.connect("activate", self.preferences)
         self.add_action(action)
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.on_quit)
@@ -43,10 +49,38 @@ class Application(Gtk.Application):
         else:
             self.window.show_dialog_loading()
 
-    def on_about(self, action, param):
-        pass
-        # about_dialog = Gtk.AboutDialog(transient_for=self.window, modal=True)
-        # about_dialog.present()
+    def new_user(self, action, param):
+        dialog = Gtk.MessageDialog(
+            transient_for=self.window,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK,
+            text="This feature is under development.",
+        )
+        dialog.run()
+        dialog.destroy()
+
+    def make_transfer(self, action, param):
+        dialog = Gtk.MessageDialog(
+            transient_for=self.window,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK,
+            text="This feature is under development.",
+        )
+        dialog.run()
+        dialog.destroy()
+
+    def preferences(self, action, param):
+        dialog = Gtk.MessageDialog(
+            transient_for=self.window,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK,
+            text="This feature is under development.",
+        )
+        dialog.run()
+        dialog.destroy()
 
     def on_quit(self, action, param):
         self.quit()

@@ -2,7 +2,7 @@ import threading
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, Gdk, GLib
 
 
 class DialogLogin(Gtk.Dialog):
@@ -16,38 +16,51 @@ class DialogLogin(Gtk.Dialog):
         builder = Gtk.Builder()
         builder.add_from_file("gtk3/glade/dialog_login.glade")
         self.main_box = builder.get_object("MainBox")
+        self.error_label = builder.get_object("ErrorLabel")
         self.entry_user = builder.get_object("EntryUser")
         self.entry_user.set_text(self.user)
         self.entry_pswd = builder.get_object("EntryPassword")
-        button_login = builder.get_object("ButtonLogin")
-        button_login.connect("clicked", self.button_login_clicked)
+        self.button_login = builder.get_object("ButtonLogin")
+        self.button_login.connect("clicked", self.button_login_clicked)
 
+        self.connect("key-release-event", self.on_key_release)
         box = self.get_content_area()
         box.add(self.main_box)
         self.show_all()
 
+    def on_key_release(self, widget, ev, data=None):
+        if ev.keyval == Gdk.KEY_Return:
+            self.button_login_clicked(self.button_login)
+
     def button_login_clicked(self, button):
         user = self.entry_user.get_text()
         password = self.entry_pswd.get_text()
-        thread = threading.Thread(target=self.authenticate,
-                                  args=(user, password))
-        thread.daemon = True
-        thread.start()
+        if user and password:
+            self.button_login.set_sensitive(False)
+            self.error_label.set_text("Connecting...")
+            thread = threading.Thread(target=self.authenticate,
+                                      args=(user, password))
+            thread.daemon = True
+            thread.start()
 
     def authenticate(self, user, password):
         ok, error = self.access.new_access(user, password)
         if not ok:
-            if error == "Wrong credentials":
-                print(error)
-            if error[0:7] == "Network":
-                print(error)
-            GLib.idle_add(self.auth_wrong)
+            GLib.idle_add(self.auth_wrong, error)
 
         else:
             GLib.idle_add(self.auth_done)
 
-    def auth_wrong(self):
-        print("Error on authentication")
+    def auth_wrong(self, error):
+        if error == "Wrong credentials":
+            self.error_label.set_text(
+                "Authentication error. Please, try again.")
+            self.entry_pswd.set_text("")
+        if error[0:7] == "Network":
+            self.error_label.set_text(
+                "Network error. Cannot connect.")
+        print(error)
+        self.button_login.set_sensitive(True)
 
     def auth_done(self):
         print("Succesful authentication")

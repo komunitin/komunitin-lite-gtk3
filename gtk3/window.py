@@ -57,7 +57,6 @@ class AppWindow(Gtk.ApplicationWindow):
 
         self.scrollable_treelist.add(self.treeview)
 
-
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         vbox.pack_start(hbox, False, False, 0)
         vbox.pack_start(self.grid, True, True, 0)
@@ -87,7 +86,6 @@ class AppWindow(Gtk.ApplicationWindow):
             self.net_label.set_text(self.groups[0]["code"])
             self.balance_label.set_text(
                 "{} {}".format(self.balance, self.currency["symbol"]))
-            print(str(self.transfers))
             for trans in self.transfers:
                 created = datetime.datetime.fromisoformat(
                     trans["attributes"]["created"])

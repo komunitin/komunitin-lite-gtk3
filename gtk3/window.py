@@ -37,18 +37,30 @@ class AppWindow(Gtk.ApplicationWindow):
         hbox.pack_start(self.balance_label, True, True, 0)
 
         # Transactions list.
-        self.textview = Gtk.TextView()
-        self.textbuffer = self.textview.get_buffer()
-        self.textbuffer.set_text("No transactions to show.")
+        self.grid = Gtk.Grid()
+        self.grid.set_column_homogeneous(True)
+        self.grid.set_row_homogeneous(True)
+        # self.add(self.grid)
 
-        scrolledwindow = Gtk.ScrolledWindow()
-        scrolledwindow.set_hexpand(False)
-        scrolledwindow.set_vexpand(True)
-        scrolledwindow.add(self.textview)
+        self.transfers_liststore = Gtk.ListStore(str, str, str, str)
+        self.treeview = Gtk.TreeView(model=self.transfers_liststore)
+        for i, column_title in enumerate(
+            ["Created", "Concept", "State", "Amount"]
+        ):
+            renderer = Gtk.CellRendererText()
+            column = Gtk.TreeViewColumn(column_title, renderer, text=i)
+            self.treeview.append_column(column)
+
+        self.scrollable_treelist = Gtk.ScrolledWindow()
+        self.scrollable_treelist.set_vexpand(True)
+        self.grid.attach(self.scrollable_treelist, 0, 0, 8, 10)
+
+        self.scrollable_treelist.add(self.treeview)
+
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         vbox.pack_start(hbox, False, False, 0)
-        vbox.pack_start(scrolledwindow, True, True, 0)
+        vbox.pack_start(self.grid, True, True, 0)
 
         self.add(vbox)
 
@@ -75,18 +87,18 @@ class AppWindow(Gtk.ApplicationWindow):
             self.net_label.set_text(self.groups[0]["code"])
             self.balance_label.set_text(
                 "{} {}".format(self.balance, self.currency["symbol"]))
-            self.textbuffer.set_text("Last transactions\n")
+            print(str(self.transfers))
             for trans in self.transfers:
-                end_buffer = self.textbuffer.get_end_iter()
                 created = datetime.datetime.fromisoformat(
                     trans["attributes"]["created"])
                 amount = str(trans["attributes"]["amount"]) + " " + \
                     self.currency["symbol"]
-                self.textbuffer.insert(end_buffer, "{}| {}| {}\n".format(
-                    created.strftime("%d/%m/%Y").ljust(12),
-                    trans["attributes"]["meta"].ljust(50),
-                    amount.ljust(20)
-                ))
+                self.transfers_liststore.append([
+                    created.strftime("%d/%m/%Y"),
+                    trans["attributes"]["meta"],
+                    trans["attributes"]["state"],
+                    str(amount)
+                ])
 
     def on_account_combo_changed(self, combo):
         pass

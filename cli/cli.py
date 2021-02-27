@@ -28,7 +28,7 @@ def command_line_interface(config):
                     sys.exit()
 
     try:
-        members, accounts, groups = get_user_accounts(access.headers)
+        members, accounts, groups = get_user_accounts(access)
     except Exception as e:
         print(str(e))
         sys.exit()
@@ -36,7 +36,7 @@ def command_line_interface(config):
     print("Getting account info...", end='\r', flush=True)
     try:
         balance, currency = get_account_balance(
-            access.headers, groups[0]["code"], members[0]["code"])
+            access, groups[0]["code"], members[0]["code"])
     except Exception as e:
         print(str(e))
         sys.exit()
@@ -44,7 +44,7 @@ def command_line_interface(config):
     print("Getting last transactions...", end='\r', flush=True)
     try:
         transfers = get_account_statement(
-            access.headers, groups[0]["code"], accounts[0]["id"])
+            access, groups[0]["code"], accounts[0]["id"])
     except Exception as e:
         print(str(e))
         sys.exit()

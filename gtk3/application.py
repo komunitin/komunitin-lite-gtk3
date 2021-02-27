@@ -50,15 +50,7 @@ class Application(Gtk.Application):
             self.window.show_dialog_loading()
 
     def new_user(self, action, param):
-        dialog = Gtk.MessageDialog(
-            transient_for=self.window,
-            flags=0,
-            message_type=Gtk.MessageType.INFO,
-            buttons=Gtk.ButtonsType.OK,
-            text="This feature is under development.",
-        )
-        dialog.run()
-        dialog.destroy()
+        self.window.show_dialog_login()
 
     def make_transfer(self, action, param):
         dialog = Gtk.MessageDialog(

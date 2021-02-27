@@ -22,13 +22,13 @@ class AppWindow(Gtk.ApplicationWindow):
 
         # Combo to select account.
         self.accs_combo = Gtk.ComboBoxText()
-        self.accs_combo.append_text("No account")
+        self.accs_combo.append_text("----")
         self.accs_combo.set_active(0)
         self.accs_combo.connect("changed", self.on_account_combo_changed)
 
         # Network and balance labels.
-        self.net_label = Gtk.Label(label="No network")
-        self.balance_label = Gtk.Label(label="No balance")
+        self.net_label = Gtk.Label(label="----")
+        self.balance_label = Gtk.Label(label="----")
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         hbox.set_homogeneous(True)
@@ -76,6 +76,16 @@ class AppWindow(Gtk.ApplicationWindow):
             self.dialog_loading.set_decorated(False)
             self.dialog_loading.connect("destroy",
                                         lambda x: self.fill_with_data())
+        else:
+            dialog = Gtk.MessageDialog(
+                transient_for=self,
+                flags=0,
+                message_type=Gtk.MessageType.INFO,
+                buttons=Gtk.ButtonsType.OK,
+                text="You are not authenticated. Try with new user option.",
+            )
+            dialog.run()
+            dialog.destroy()
 
     def fill_with_data(self):
         if self.members:
@@ -86,6 +96,7 @@ class AppWindow(Gtk.ApplicationWindow):
             self.net_label.set_text(self.groups[0]["code"])
             self.balance_label.set_text(
                 "{} {}".format(self.balance, self.currency["symbol"]))
+            self.transfers_liststore.clear()
             for trans in self.transfers:
                 created = datetime.datetime.fromisoformat(
                     trans["attributes"]["created"])

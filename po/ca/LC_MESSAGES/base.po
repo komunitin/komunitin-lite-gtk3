@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2021-02-27 14:28+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: cli/cli.py:17
+msgid "Email"
+msgstr "Correu electrònic"
+
+#: cli/cli.py:20
+msgid "Password"
+msgstr "Contrasenya"
+
+#: cli/cli.py:23
+msgid "Authenticating"
+msgstr ""
+
+#: cli/cli.py:27
+msgid "Wrong credentials"
+msgstr ""
+
+#: cli/cli.py:29
+msgid "Network error"
+msgstr ""
+
+#: cli/cli.py:37
+msgid "Account"
+msgstr ""
+
+#: cli/cli.py:38
+msgid "Getting account info"
+msgstr ""
+
+#: cli/cli.py:45
+msgid "Balance"
+msgstr ""
+
+#: cli/cli.py:46
+msgid "Getting last transactions"
+msgstr ""
+

@@ -3,6 +3,7 @@ import sys, getpass, datetime
 from utils.oauth2 import ApiAccess
 from utils.api_services import get_user_accounts, get_account_balance
 from utils.api_services import get_account_statement
+from gettext import gettext as _
 
 
 def command_line_interface(config):
@@ -13,18 +14,19 @@ def command_line_interface(config):
         ok = False
         while not ok:
             user = access.user
-            message_input = "Email: (" + user + "): " if user else "Email: "
+            message_input = _("Email")
+            message_input += " (" + user + "): " if user else ": "
             user_input = input(message_input)
-            password = getpass.getpass()
+            password = getpass.getpass(_("Password") + ": ")
             if user_input:
                 user = user_input
-            print("Authenticating...", end='\r', flush=True)
+            print(_("Authenticating") + "...", end='\r', flush=True)
             ok, error = access.new_access(user, password)
             if not ok:
                 if error == "Wrong credentials":
-                    print(error)
+                    print(_("Wrong credentials"))
                 if error[0:7] == "Network":
-                    print(error)
+                    print(_("Network error"))
                     sys.exit()
 
     try:
@@ -32,16 +34,16 @@ def command_line_interface(config):
     except Exception as e:
         print(str(e))
         sys.exit()
-    print("Account: {}".format(members[0]["code"]) + " "*10)
-    print("Getting account info...", end='\r', flush=True)
+    print(_("Account") + ": {}".format(members[0]["code"]) + " "*10)
+    print(_("Getting account info") + "...", end='\r', flush=True)
     try:
         balance, currency = get_account_balance(
             access, groups[0]["code"], members[0]["code"])
     except Exception as e:
         print(str(e))
         sys.exit()
-    print("Balance: {} {}".format(balance, currency["symbol"]) + " "*10)
-    print("Getting last transactions...", end='\r', flush=True)
+    print(_("Balance") + ": {} {}".format(balance, currency["symbol"]) + " "*10)
+    print(_("Getting last transactions") + "...", end='\r', flush=True)
     try:
         transfers = get_account_statement(
             access, groups[0]["code"], accounts[0]["id"])

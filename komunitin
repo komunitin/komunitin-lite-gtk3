@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 import sys, configparser
+from gettext import gettext as _
 
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()
     try:
-        config.read('config.ini')
+        config.read('config_default.ini')
     except Exception as e:
-        print("Error reading configuration data.")
+        print(_("Error reading configuration data."))
         print(str(e))
         sys.exit()
 

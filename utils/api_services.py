@@ -1,14 +1,14 @@
 import requests
-from .oauth2 import BASE_URL, KomunitinNetError
+from .oauth2 import KomunitinNetError
 
 
-def get_user_accounts(headers):
-    me_url = BASE_URL + \
-      "/ces/api/social/users/me?include=members,members.account,members.group"
+def get_user_accounts(access):
+    me_url = access.server["base_api_url"] + \
+      "/social/users/me?include=members,members.account,members.group"
     members = []
     groups = []
     accounts = []
-    resp = requests.get(me_url, headers=headers)
+    resp = requests.get(me_url, headers=access.headers)
     if resp.status_code == 200:
         user_info = resp.json()
         for data in user_info['included']:
@@ -32,10 +32,10 @@ def get_user_accounts(headers):
     return members, accounts, groups
 
 
-def get_account_balance(headers, group, account):
-    acc_url = BASE_URL + \
-      "/ces/api/accounting/{}/accounts/{}?include=currency"
-    resp = requests.get(acc_url.format(group, account), headers=headers)
+def get_account_balance(access, group, account):
+    acc_url = access.server["base_api_url"] + \
+      "/accounting/{}/accounts/{}?include=currency"
+    resp = requests.get(acc_url.format(group, account), headers=access.headers)
     if resp.status_code == 200:
         account_info = resp.json()
 
@@ -48,11 +48,12 @@ def get_account_balance(headers, group, account):
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
-def get_account_statement(headers, group, account_id):
-    trans_url = BASE_URL + \
-      "/ces/api/accounting/{}/transfers?filter[account]={}"
+def get_account_statement(access, group, account_id):
+    trans_url = access.server["base_api_url"] + \
+      "/accounting/{}/transfers?filter[account]={}"
     transfers = []
-    resp = requests.get(trans_url.format(group, account_id), headers=headers)
+    resp = requests.get(trans_url.format(group, account_id),
+                        headers=access.headers)
     if resp.status_code == 200:
         trans_info = resp.json()
         for trans in trans_info["data"]:

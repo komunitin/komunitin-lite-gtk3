@@ -1,11 +1,6 @@
 import time, requests
 from .local_storage import get_local_data, put_local_data, KomunitinFileError
 
-OAUTH_CLIENT_ID = "odoo-pos-komunitin"
-OAUTH_SCOPE = "komunitin_accounting komunitin_social profile"
-BASE_URL = "https://demo.integralces.net"
-token_url = BASE_URL + "/oauth2/token"
-
 
 class KomunitinNetError(Exception):
     def __init__(self, message, status_code=0):
@@ -19,7 +14,8 @@ class KomunitinAuthError(Exception):
 
 class ApiAccess:
 
-    def __init__(self):
+    def __init__(self, config):
+        self.server = config["server"]
         self.has_access = False
         self.headers = {}
         try:
@@ -68,10 +64,11 @@ class ApiAccess:
             "grant_type": "password",
             "username": user,
             "password": password,
-            "client_id": OAUTH_CLIENT_ID,
-            "scope": OAUTH_SCOPE
+            "client_id": self.server["oauth2_client_id"],
+            "scope": self.server["oauth2_scope"]
         }
-        response = requests.post(token_url, params, timeout=5)
+        response = requests.post(self.server["oauth2_token_url"], params,
+                                 timeout=5)
         if response.status_code == 200:
             self.user = user
             self._auth = response.json()
@@ -91,10 +88,11 @@ class ApiAccess:
             "grant_type": "refresh_token",
             "refresh_token": self._auth["refresh_token"],
             "username": self.user,
-            "client_id": OAUTH_CLIENT_ID,
-            "scope": OAUTH_SCOPE
+            "client_id": self.server["oauth2_client_id"],
+            "scope": self.server["oauth2_scope"]
         }
-        response = requests.post(token_url, params, timeout=5)
+        response = requests.post(self.server["oauth2_token_url"], params,
+                                 timeout=5)
         if response.status_code == 200:
             print("Token refreshed", end='\r', flush=True)
             self.has_access = True

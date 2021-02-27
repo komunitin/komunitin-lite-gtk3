@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 
-import sys
+import sys, configparser
 
 
 if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    try:
+        config.read('config.ini')
+    except Exception as e:
+        print("Error reading configuration data.")
+        print(str(e))
+        sys.exit()
+
     if "--cli" in sys.argv:
         from cli.cli import command_line_interface
-        command_line_interface()
+        command_line_interface(config)
     else:
         from gtk3.application import Application
-        app = Application()
+        app = Application(config=config)
         app.run(sys.argv)

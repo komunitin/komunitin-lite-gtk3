@@ -10,13 +10,14 @@ from utils.oauth2 import ApiAccess
 
 
 class Application(Gtk.Application):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, config, **kwargs):
         super().__init__(
             *args,
             application_id="org.komunitin.komunitinLite",
             flags=Gio.ApplicationFlags.FLAGS_NONE,
             **kwargs
         )
+        self.config = config
         self.window = None
         self.access = None
 
@@ -36,7 +37,7 @@ class Application(Gtk.Application):
         self.add_action(action)
         builder = Gtk.Builder.new_from_string(MENU_XML, -1)
         self.set_app_menu(builder.get_object("app-menu"))
-        self.access = ApiAccess()
+        self.access = ApiAccess(self.config)
 
     def do_activate(self):
         if not self.window:

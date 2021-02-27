@@ -12,6 +12,7 @@ class DialogLoading(Gtk.Dialog):
     def __init__(self, parent, access):
         Gtk.Dialog.__init__(self, title="Loading data", transient_for=parent)
         self.parent = parent
+        self.access = access
         self.headers = access.headers
 
         builder = Gtk.Builder()
@@ -30,11 +31,11 @@ class DialogLoading(Gtk.Dialog):
 
     def get_new_data(self, headers):
         try:
-            members, accounts, groups = get_user_accounts(headers)
+            members, accounts, groups = get_user_accounts(self.access)
             balance, currency = get_account_balance(
-                headers, groups[0]["code"], members[0]["code"])
+                self.access, groups[0]["code"], members[0]["code"])
             transfers = get_account_statement(
-                headers, groups[0]["code"], accounts[0]["id"])
+                self.access, groups[0]["code"], accounts[0]["id"])
         except Exception as e:
             GLib.idle_add(self.error_getting_data, e)
 

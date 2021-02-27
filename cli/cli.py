@@ -5,10 +5,10 @@ from utils.api_services import get_user_accounts, get_account_balance
 from utils.api_services import get_account_statement
 
 
-def command_line_interface():
+def command_line_interface(config):
     user = ""
     print("Connecting...", end='\r', flush=True)
-    access = ApiAccess()
+    access = ApiAccess(config)
     if not access.has_access:
         ok = False
         while not ok:

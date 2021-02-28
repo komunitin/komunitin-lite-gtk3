@@ -3,7 +3,6 @@ import sys, getpass, datetime
 from utils.oauth2 import ApiAccess
 from utils.api_services import get_user_accounts, get_account_balance
 from utils.api_services import get_account_statement
-from gettext import gettext as _
 
 
 def command_line_interface(config):

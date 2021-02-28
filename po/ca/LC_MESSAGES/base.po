@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2021-02-27 14:28+0100\n"
+"POT-Creation-Date: 2021-02-28 19:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,39 +15,87 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: cli/cli.py:17
+#: ./cli/cli.py:16 ./gtk3/dialog_login.py:22
 msgid "Email"
 msgstr "Correu electrònic"
 
-#: cli/cli.py:20
+#: ./cli/cli.py:19 ./gtk3/dialog_login.py:28
 msgid "Password"
 msgstr "Contrasenya"
 
-#: cli/cli.py:23
+#: ./cli/cli.py:22
 msgid "Authenticating"
-msgstr ""
+msgstr "Provant autenticació"
 
-#: cli/cli.py:27
+#: ./cli/cli.py:26
 msgid "Wrong credentials"
 msgstr ""
 
-#: cli/cli.py:29
+#: ./cli/cli.py:28
 msgid "Network error"
 msgstr ""
 
-#: cli/cli.py:37
+#: ./cli/cli.py:36
 msgid "Account"
 msgstr ""
 
-#: cli/cli.py:38
+#: ./cli/cli.py:37
 msgid "Getting account info"
 msgstr ""
 
-#: cli/cli.py:45
+#: ./cli/cli.py:44
 msgid "Balance"
 msgstr ""
 
-#: cli/cli.py:46
+#: ./cli/cli.py:45
 msgid "Getting last transactions"
+msgstr ""
+
+#: ./gtk3/application.py:46
+msgid "Komunitin Lite"
+msgstr ""
+
+#: ./gtk3/application.py:65 ./gtk3/application.py:76
+msgid "This feature is under development."
+msgstr ""
+
+#: ./gtk3/dialog_loading.py:22
+msgid "Loading data"
+msgstr "Carregant dades"
+
+#: ./gtk3/dialog_login.py:10
+msgid "Server"
+msgstr "Servidor"
+
+#: ./gtk3/dialog_login.py:47
+msgid "Connecting"
+msgstr "Conectant"
+
+#: ./gtk3/dialog_login.py:64
+msgid "Authentication error. Please, try again."
+msgstr ""
+
+#: ./gtk3/dialog_login.py:68
+msgid "Network error. Cannot connect."
+msgstr ""
+
+#: ./gtk3/window.py:48
+msgid "Amount"
+msgstr "Quantitat"
+
+#: ./gtk3/window.py:48
+msgid "Concept"
+msgstr "Concepte"
+
+#: ./gtk3/window.py:48
+msgid "Created"
+msgstr "Creada"
+
+#: ./gtk3/window.py:48
+msgid "State"
+msgstr "Estat"
+
+#: ./gtk3/window.py:85
+msgid "You are not authenticated. Try with new user option."
 msgstr ""
 

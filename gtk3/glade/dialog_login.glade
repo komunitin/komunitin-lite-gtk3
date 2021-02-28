@@ -33,11 +33,11 @@
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="LabelEmail">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_right">10</property>
-                <property name="label" translatable="yes">User:</property>
+                <property name="label" translatable="yes">Email:</property>
                 <property name="justify">right</property>
                 <property name="xalign">1</property>
               </object>
@@ -48,7 +48,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="EntryUser">
+              <object class="GtkEntry" id="EntryEmail">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -71,7 +71,7 @@
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="LabelPassword">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_right">10</property>

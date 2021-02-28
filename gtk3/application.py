@@ -41,8 +41,11 @@ class Application(Gtk.Application):
 
     def do_activate(self):
         if not self.window:
-            self.window = AppWindow(application=self, title="Komunitin Lite",
-                                    access=self.access)
+            self.window = AppWindow(
+                application=self,
+                title=_("Komunitin Lite"),
+                access=self.access
+            )
             self.add_window(self.window)
         self.window.show_all()
         if not self.access.has_access:
@@ -59,7 +62,7 @@ class Application(Gtk.Application):
             flags=0,
             message_type=Gtk.MessageType.INFO,
             buttons=Gtk.ButtonsType.OK,
-            text="This feature is under development.",
+            text=_("This feature is under development.")
         )
         dialog.run()
         dialog.destroy()
@@ -70,7 +73,7 @@ class Application(Gtk.Application):
             flags=0,
             message_type=Gtk.MessageType.INFO,
             buttons=Gtk.ButtonsType.OK,
-            text="This feature is under development.",
+            text=_("This feature is under development.")
         )
         dialog.run()
         dialog.destroy()

@@ -45,7 +45,7 @@ class AppWindow(Gtk.ApplicationWindow):
         self.transfers_liststore = Gtk.ListStore(str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.transfers_liststore)
         for i, column_title in enumerate(
-            ["Created", "Concept", "State", "Amount"]
+            [_("Created"), _("Concept"), _("State"), _("Amount")]
         ):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
@@ -82,7 +82,7 @@ class AppWindow(Gtk.ApplicationWindow):
                 flags=0,
                 message_type=Gtk.MessageType.INFO,
                 buttons=Gtk.ButtonsType.OK,
-                text="You are not authenticated. Try with new user option.",
+                text=_("You are not authenticated. Try with new user option.")
             )
             dialog.run()
             dialog.destroy()

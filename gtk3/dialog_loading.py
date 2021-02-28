@@ -19,6 +19,7 @@ class DialogLoading(Gtk.Dialog):
         builder.add_from_file("gtk3/glade/dialog_loading.glade")
         self.main_box = builder.get_object("MainBox")
         self.label_error = builder.get_object("LabelError")
+        self.label_error.set_text(_("Loading data") + "...")
 
         box = self.get_content_area()
         box.add(self.main_box)

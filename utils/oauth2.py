@@ -19,7 +19,9 @@ class ApiAccess:
         self.has_access = False
         self.headers = {}
         try:
-            self.user, self._auth = get_local_data()
+            kdata = get_local_data()
+            self.user = kdata["user"] if "user" in kdata else ""
+            self._auth = kdata["auth"] if "auth" in kdata else {}
         except KomunitinFileError:
             self.user = ""
             self._auth = {}
@@ -72,9 +74,10 @@ class ApiAccess:
         if response.status_code == 200:
             self.user = user
             self._auth = response.json()
+            self._auth["created"] = int(time.time())
             self.has_access = True
             self.headers = self._make_headers(self._auth['access_token'])
-            put_local_data(self.user, self._auth)
+            put_local_data({"user": self.user, "auth": self._auth})
         elif response.status_code == 401:
             # Authentication fail
             self.has_access = False
@@ -97,8 +100,9 @@ class ApiAccess:
             print("Token refreshed", end='\r', flush=True)
             self.has_access = True
             self._auth = response.json()
+            self._auth["created"] = int(time.time())
             self.headers = self._make_headers(self._auth['access_token'])
-            put_local_data(self.user, self._auth)
+            put_local_data({"user": self.user, "auth": self._auth})
         else:
             print("Error %s: %s" % (response.status_code, response.text))
             raise KomunitinNetError(response.text, response.status_code)

@@ -1,6 +1,9 @@
-import os, time, json, base64
+import os, json, base64
 
-KOMUNITIN_FILE = os.path.join(os.path.expanduser("~"), '.komunitin')
+KOMUNITIN_DATA_FILE = os.path.join(os.path.expanduser("~"),
+                                   '.komunitin_lite/data')
+KOMUNITIN_CONFIG_FILE = os.path.join(os.path.expanduser("~"),
+                                     '.komunitin_lite/config')
 
 
 class KomunitinFileError(Exception):
@@ -26,35 +29,41 @@ def _decode(key, enc):
     return "".join(dec)
 
 
-def get_local_data():
+def get_local_data(config=False):
+    local_file = KOMUNITIN_DATA_FILE
+    if config:
+        local_file = KOMUNITIN_CONFIG_FILE
     komunitin_data = {}
-    if os.path.isfile(KOMUNITIN_FILE):
+    if os.path.isfile(local_file):
         try:
-            with open(KOMUNITIN_FILE, "r") as f:
+            with open(local_file, "r") as f:
                 data = f.read()
             data = _decode("ofuscation", data)
-            komunitin_data =  json.loads(data)
+            komunitin_data = json.loads(data)
         except Exception as e:
             print("Something wrong reading local data: %s" % e)
             raise KomunitinFileError(e)
 
-    if komunitin_data:
-        if "user" in komunitin_data and "auth" in komunitin_data:
-            return komunitin_data["user"], komunitin_data["auth"]
+    return komunitin_data
 
-    return "", ""
 
-def put_local_data(user, auth):
-    if "created" not in auth:
-        auth["created"] = int(time.time())
-    komunitin_data = {
-        "user": user,
-        "auth": auth
-    }
+def put_local_data(komunitin_data, config=False):
+    local_file = KOMUNITIN_DATA_FILE
+    if config:
+        local_file = KOMUNITIN_CONFIG_FILE
+
+    # Only first time
+    if not os.path.exists(os.path.dirname(local_file)):
+        try:
+            os.makedirs(os.path.dirname(local_file))
+        except Exception as e:
+            print("Something wrong creating local data directory: %s" % e)
+            raise KomunitinFileError(e)
+
     try:
         data = json.dumps(komunitin_data)
         data = _encode("ofuscation", data)
-        with open(KOMUNITIN_FILE, "w") as f:
+        with open(local_file, "w") as f:
             f.write(data)
     except Exception as e:
         print("Something wrong writing local data: %s" % e)

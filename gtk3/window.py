@@ -5,6 +5,7 @@ from gi.repository import Gtk
 
 from gtk3.dialog_login import DialogLogin
 from gtk3.dialog_loading import DialogLoading
+from gtk3.dialog_preferences import DialogPreferences
 
 
 class AppWindow(Gtk.ApplicationWindow):
@@ -108,6 +109,11 @@ class AppWindow(Gtk.ApplicationWindow):
                     trans["attributes"]["state"],
                     str(amount)
                 ])
+
+    def show_dialog_preferences(self):
+        dialog = DialogPreferences(parent=self)
+        dialog.run()
+        dialog.destroy()
 
     def on_account_combo_changed(self, combo):
         pass

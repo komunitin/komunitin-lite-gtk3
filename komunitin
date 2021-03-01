@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-import os, sys, shutil, configparser
+import os, sys, configparser
 import gettext
+
+from utils.local_storage import get_local_data
+
 
 if __name__ == "__main__":
     config_file = "config.ini"
-    if not os.path.isfile("config.ini"):
+    if not os.path.isfile(config_file):
         config_file = "config_default.ini"
     config = configparser.ConfigParser()
     try:
@@ -15,7 +18,14 @@ if __name__ == "__main__":
         print(str(e))
         sys.exit()
 
-    lang = config["language"]["default"]
+    try:
+        local_config = get_local_data(config=True)
+    except Exception as e:
+        print("Error reading configuration file.")
+        print(str(e))
+        sys.exit()
+
+    lang = local_config.get('language', 'en')
     language = gettext.translation('base', localedir='po', languages=[lang])
     language.install()
 

@@ -68,15 +68,7 @@ class Application(Gtk.Application):
         dialog.destroy()
 
     def preferences(self, action, param):
-        dialog = Gtk.MessageDialog(
-            transient_for=self.window,
-            flags=0,
-            message_type=Gtk.MessageType.INFO,
-            buttons=Gtk.ButtonsType.OK,
-            text=_("This feature is under development.")
-        )
-        dialog.run()
-        dialog.destroy()
+        self.window.show_dialog_preferences()
 
     def on_quit(self, action, param):
         self.quit()

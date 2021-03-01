@@ -1,17 +1,18 @@
-import gettext
+import os
 import gi
+from glob import glob
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
 
-from utils.local_storage import get_local_data
+from utils.local_storage import get_local_data, put_local_data
 
 
 class DialogPreferences(Gtk.Dialog):
     def __init__(self, parent):
         Gtk.Dialog.__init__(self, title=_("Preferences"), transient_for=parent)
         self.parent = parent
-        self.set_default_size(400, 300)
+        self.set_default_size(300, 200)
 
         builder = Gtk.Builder()
         builder.add_from_file("gtk3/glade/dialog_preferences.glade")
@@ -20,23 +21,24 @@ class DialogPreferences(Gtk.Dialog):
         self.label_langs.set_text(_("Select language") + ":")
         self.combo_langs = builder.get_object("ComboLangs")
         self.label_restart = builder.get_object("LabelRestart")
-        self.label_restart.set_text(
-            _("(You need to restart Komunitin Lite to see changes)"))
+        # self.label_restart.set_line_wrap(True)
         self.button_save = builder.get_object("ButtonSave")
         self.button_save.connect("clicked", self.button_save_clicked)
 
-        langs_available = gettext.find("base", localedir="po", all=True)
-        print(langs_available)
-
+        paths = glob(os.path.join("po", '*', 'LC_MESSAGES', 'base.mo'))
+        langs_available = [pth.split(os.path.sep)[-3] for pth in paths]
+        local_config = {}
         try:
             local_config = get_local_data(config=True)
         except Exception as e:
             print("Error reading configuration file.")
             print(str(e))
-        print(local_config)
 
+        self.current_lang = local_config["language"] if local_config else "en"
+        self.combo_langs.append_text(self.current_lang)
         for lang in langs_available:
-            self.combo_langs.append_text(lang[3:5])
+            if lang != self.current_lang:
+                self.combo_langs.append_text(lang)
         self.combo_langs.set_active(0)
         self.combo_langs.connect("changed", self.on_lengs_combo_changed)
 
@@ -50,7 +52,14 @@ class DialogPreferences(Gtk.Dialog):
             self.button_save_clicked(self.button_login)
 
     def button_save_clicked(self, button):
-        pass
+        lang = self.combo_langs.get_active_text()
+        if lang != self.current_lang:
+            komunitin_config = {
+                "language": lang
+            }
+            put_local_data(komunitin_config, config=True)
+        self.destroy()
 
     def on_lengs_combo_changed(self, combo):
-        pass
+        self.label_restart.set_text(
+            _("(To see the changes,\nsave and restart.)"))

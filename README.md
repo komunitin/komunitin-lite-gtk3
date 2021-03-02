@@ -13,10 +13,12 @@ and edit the `config.ini` file.
 Clone and run `python3 komunitin` 
 (or `python3 komunitin --cli` for command line interface)
 
+To run tests: `python3 -m unittest`
+
 #### TODO
 - Transfers pagination
 - Make transactions in a new dialog
-- Translations
-- Tests
+- Update translations
+- More tests
 - ... 
 

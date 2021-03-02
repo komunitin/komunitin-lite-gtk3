@@ -10,6 +10,16 @@ class KomunitinFileError(Exception):
     pass
 
 
+def get_local_data(config=False):
+    local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
+    return _read_data(local_file)
+
+
+def put_local_data(komunitin_data, config=False):
+    local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
+    return _write_data(komunitin_data, local_file)
+
+
 def _encode(key, clear):
     enc = []
     for i in range(len(clear)):
@@ -29,10 +39,7 @@ def _decode(key, enc):
     return "".join(dec)
 
 
-def get_local_data(config=False):
-    local_file = KOMUNITIN_DATA_FILE
-    if config:
-        local_file = KOMUNITIN_CONFIG_FILE
+def _read_data(local_file):
     komunitin_data = {}
     if os.path.isfile(local_file):
         try:
@@ -47,10 +54,7 @@ def get_local_data(config=False):
     return komunitin_data
 
 
-def put_local_data(komunitin_data, config=False):
-    local_file = KOMUNITIN_DATA_FILE
-    if config:
-        local_file = KOMUNITIN_CONFIG_FILE
+def _write_data(komunitin_data, local_file):
 
     # Only first time
     if not os.path.exists(os.path.dirname(local_file)):
@@ -68,3 +72,5 @@ def put_local_data(komunitin_data, config=False):
     except Exception as e:
         print("Something wrong writing local data: %s" % e)
         raise KomunitinFileError(e)
+
+    return True

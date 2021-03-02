@@ -18,30 +18,15 @@ class ApiAccess:
         self.server = config["server"]
         self.has_access = False
         self.headers = {}
-        try:
-            kdata = get_local_data()
-            self.user = kdata["user"] if "user" in kdata else ""
-            self._auth = kdata["auth"] if "auth" in kdata else {}
-        except KomunitinFileError:
-            self.user = ""
-            self._auth = {}
-
+        self.user = ""
+        self._auth = self._read_initial_auth()
         if self._auth:
-            # check if token is expired
-            expire = int(self._auth["created"]) + int(self._auth["expires_in"])
-            if int(time.time()) > expire:
-                # expired token.
+            # valid token, so try to refresh it.
+            try:
+                self._refresh_auth_token()
+            except Exception:
+                print("Cannot refresh a non-expired token")
                 self._auth = {}
-            else:
-                # valid token, so refresh it.
-                try:
-                    self._refresh_auth_token()
-                except (KomunitinNetError,
-                        requests.exceptions.ReadTimeout,
-                        requests.exceptions.ConnectionError):
-                    self._auth = {}
-                except KomunitinFileError:
-                    pass
 
     def new_access(self, user, password):
         # Try to authenticate and get token.
@@ -60,6 +45,24 @@ class ApiAccess:
             self.access = True
 
         return self.has_access, error
+
+    def _read_initial_auth(self):
+        try:
+            kdata = get_local_data()
+        except KomunitinFileError:
+            return {}
+
+        self.user = kdata["user"] if "user" in kdata else ""
+
+        if "auth" in kdata:
+            # check if token is expired
+            expire = int(kdata["auth"]["created"]) + \
+                         int(kdata["auth"]["expires_in"])
+            if int(time.time()) > expire:
+                # expired token.
+                return {}
+
+        return kdata["auth"] if "auth" in kdata else {}
 
     def _get_auth_token(self, user, password):
         params = {

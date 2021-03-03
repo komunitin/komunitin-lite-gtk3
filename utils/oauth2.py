@@ -51,9 +51,7 @@ class ApiAccess:
             kdata = get_local_data()
         except KomunitinFileError:
             return {}
-
         self.user = kdata["user"] if "user" in kdata else ""
-
         if "auth" in kdata:
             # check if token is expired
             expire = int(kdata["auth"]["created"]) + \

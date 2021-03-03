@@ -18,7 +18,9 @@ class TestLocalStorage(unittest.TestCase):
         self.assertTrue(self.test_data["test_index"] ==
                         decoded_data["test_index"])
 
-    def test_write_data(self):
+    @patch('utils.local_storage.os.path')
+    def test_write_data(self, mock_path):
+        mock_path.exists.return_value = True
         m = mock_open()
         with patch('utils.local_storage.open', m):
             wrote = put_local_data(self.test_data)
@@ -27,14 +29,14 @@ class TestLocalStorage(unittest.TestCase):
         handle = m()
         handle.write.assert_called_once_with(self.encoded_data)
 
-    def test_read_data(self):
+    @patch('utils.local_storage.os.path')
+    def test_read_data(self, mock_path):
+        mock_path.isfile.return_value = True
         m = mock_open(read_data=self.encoded_data)
         with patch('utils.local_storage.open', m):
             data_read = get_local_data()
-        self.assertTrue(data_read == self.test_data)
         m.assert_called_once_with(KOMUNITIN_DATA_FILE, 'r')
-        handle = m()
-        handle.read.assert_called_once_with()
+        self.assertTrue(data_read == self.test_data)
 
 
 if __name__ == '__main__':

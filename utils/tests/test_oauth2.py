@@ -1,10 +1,9 @@
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import Mock, patch
 import configparser
-import json
+import time
 
 from utils.oauth2 import ApiAccess
-from utils.local_storage import _encode, KOMUNITIN_DATA_FILE
 
 
 class TestOauth2(unittest.TestCase):
@@ -29,29 +28,26 @@ class TestOauth2(unittest.TestCase):
             'user': 'user@test.server.com',
             'auth': self.server_oauth2_response
         }
-        self.local_data["auth"]["created"] = 1614704597
-        self.encoded_local_data = _encode("ofuscation",
-                                          json.dumps(self.local_data))
+        self.local_data["auth"]["created"] = int(time.time())
 
-    def test_init_ApiAccess(self):
-        m = mock_open(read_data=self.encoded_local_data)
-        with patch('utils.local_storage.open', m):
-            self.access = ApiAccess(self.test_config)
+    @patch('utils.local_storage.get_local_data')
+    def test_init_no_data(self, mock_get_data):
+        mock_get_data.return_value = {}
+        self.access = ApiAccess(self.test_config)
         self.assertTrue(self.access.has_access is False)
-        m.assert_called_once_with(KOMUNITIN_DATA_FILE, 'r')
-        handle = m()
-        handle.read.assert_called_once_with()
 
-#    @patch('utils.oauth2.requests.post')
-#    def test_new_access(self, fake_post):
-#        fake_post.return_value.json.return_value = self.server_oauth2_response
-#        m = mock_open()
-#        with patch('utils.local_storage.open', m):
-#            wrote = put_local_data(self.test_data)
-#        self.assertTrue(wrote)
-#        m.assert_called_once_with(KOMUNITIN_DATA_FILE, 'w')
-#        handle = m()
-#        handle.write.assert_called_once_with(self.encoded_data)
+    @patch('utils.oauth2.requests.post')
+    @patch('utils.oauth2.put_local_data')
+    @patch('utils.oauth2.get_local_data')
+    def test_init_with_data(self, mock_get_data, mock_put_data, mock_post):
+        mock_get_data.return_value = self.local_data
+        mock_put_data.return_value = True
+        response_mock = Mock()
+        response_mock.status_code = 200
+        response_mock.json.return_value = self.server_oauth2_response
+        mock_post.return_value = response_mock
+        self.access = ApiAccess(self.test_config)
+        self.assertTrue(self.access.has_access is True)
 
 
 if __name__ == '__main__':

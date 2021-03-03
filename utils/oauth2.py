@@ -98,7 +98,6 @@ class ApiAccess:
         response = requests.post(self.server["oauth2_token_url"], params,
                                  timeout=5)
         if response.status_code == 200:
-            print("Token refreshed", end='\r', flush=True)
             self.has_access = True
             self._auth = response.json()
             self._auth["created"] = int(time.time())

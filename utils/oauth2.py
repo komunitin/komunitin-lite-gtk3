@@ -68,6 +68,7 @@ class ApiAccess:
             "username": user,
             "password": password,
             "client_id": self.server["oauth2_client_id"],
+            # "client_secret": self.server["oauth2_client_password"],
             "scope": self.server["oauth2_scope"]
         }
         response = requests.post(self.server["oauth2_token_url"], params,

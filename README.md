@@ -3,7 +3,7 @@
 Basic python GTK3 client for komunitin users.
 
 All dependencies are already installed by default in most current GNU/Linux distributions:
-- python3 (requests, threading, etc...)
+- python >= 3.8 (requests, threading, etc...)
 - PyGObject >= 3.36.0
 
 You can choose your configuration (server) by copying the config_default.ini file: 

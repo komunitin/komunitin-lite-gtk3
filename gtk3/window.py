@@ -28,11 +28,13 @@ class AppWindow(Gtk.ApplicationWindow):
         self.accs_combo.connect("changed", self.on_account_combo_changed)
 
         # Network and balance labels.
+        self.user_label = Gtk.Label(label="----")
         self.net_label = Gtk.Label(label="----")
         self.balance_label = Gtk.Label(label="----")
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         hbox.set_homogeneous(True)
+        hbox.pack_start(self.user_label, True, True, 0)
         hbox.pack_start(self.accs_combo, True, True, 0)
         hbox.pack_start(self.net_label, True, True, 0)
         hbox.pack_start(self.balance_label, True, True, 0)
@@ -90,13 +92,18 @@ class AppWindow(Gtk.ApplicationWindow):
 
     def fill_with_data(self):
         if self.members:
+            name = self.members[0]["name"]
+            name = (name[:10] + '..') if len(name) > 10 else name
+            self.user_label.set_text(_("Name") + ": {}".format(name))
             self.accs_combo.remove_all()
             for memb in self.members:
                 self.accs_combo.append_text(memb["code"])
             self.accs_combo.set_active(0)
-            self.net_label.set_text(self.groups[0]["code"])
-            self.balance_label.set_text(
-                "{} {}".format(self.balance, self.currency["symbol"]))
+            self.net_label.set_text(
+                _("Group") + ": {}".format(self.groups[0]["code"]))
+            show_balance = int(self.balance)*10**(-int(self.currency["decimals"]))
+            self.balance_label.set_text(_("Balance") +
+                ": {} {}".format(show_balance, self.currency["symbol"]))
             self.transfers_liststore.clear()
             for trans in self.transfers:
                 created = datetime.datetime.fromisoformat(

@@ -2,5 +2,5 @@
 # current GNU/Linux distributions (04/2020). To check it:
 # pip3 list | grep "PyGObject\|requests"
 
-PyGObject>=3.36.0
-requests>=2.22.0
+# PyGObject>=3.36.0
+# requests>=2.22.0

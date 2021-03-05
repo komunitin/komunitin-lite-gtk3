@@ -33,9 +33,9 @@ class ApiAccess:
         error = ""
         try:
             self._get_auth_token(user, password)
-        except KomunitinAuthError:
+        except KomunitinAuthError as e:
             self.has_access = False
-            error = "Wrong credentials"
+            error = "Wrong credentials: {}".format(e)
         except (KomunitinNetError,
                 requests.exceptions.ReadTimeout,
                 requests.exceptions.ConnectionError) as e:

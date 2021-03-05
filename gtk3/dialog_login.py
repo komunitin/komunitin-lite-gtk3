@@ -59,7 +59,7 @@ class DialogLogin(Gtk.Dialog):
             GLib.idle_add(self.auth_done)
 
     def auth_wrong(self, error):
-        if error == "Wrong credentials":
+        if error[0:17] == "Wrong credentials":
             self.error_label.set_text(
                 _("Authentication error. Please, try again."))
             self.entry_pswd.set_text("")

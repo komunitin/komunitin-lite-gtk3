@@ -8,28 +8,10 @@ from utils.api_services import get_account_statement
 
 
 def command_line_interface(config):
-    user = ""
     print("Connecting...", end='\r', flush=True)
     access = ApiAccess(config)
     if not access.has_access:
-        ok = False
-        while not ok:
-            user = access.user
-            message_input = _("Email")
-            message_input += " (" + user + "): " if user else ": "
-            user_input = input(message_input)
-            password = getpass.getpass(_("Password") + ": ")
-            if user_input:
-                user = user_input
-            print(_("Authenticating") + "...", end='\r', flush=True)
-            ok, error = access.new_access(user, password)
-            if not ok:
-                if error == "Wrong credentials":
-                    print(_("Wrong credentials"))
-                if error[0:7] == "Network":
-                    print(_("Network error"))
-                    sys.exit()
-
+        _authenticate(access)
     try:
         members, accounts, groups = get_user_accounts(access)
     except Exception as e:
@@ -61,3 +43,22 @@ def command_line_interface(config):
             trans["attributes"]["meta"].ljust(40),
             amount.ljust(10)
         ))
+
+
+def _authenticate(access):
+    ok = False
+    while not ok:
+        message = _("Email")
+        message += " (" + access.user + "): " if access.user else ": "
+        user_input = input(message)
+        password = getpass.getpass(_("Password") + ": ")
+        if user_input:
+            user = user_input
+        print(_("Authenticating") + "...", end='\r', flush=True)
+        ok, error = access.new_access(user, password)
+        if not ok:
+            if error[0:17] == "Wrong credentials":
+                print(_("Wrong credentials"))
+            if error[0:7] == "Network":
+                print(_("Network error"))
+                sys.exit()

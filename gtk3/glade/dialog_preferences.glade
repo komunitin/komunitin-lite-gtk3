@@ -34,6 +34,7 @@
         </child>
         <child>
           <object class="GtkComboBoxText" id="ComboLangs">
+            <property name="width_request">100</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
@@ -48,6 +49,8 @@
           <object class="GtkLabel" id="LabelRestart">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="label" translatable="yes">
+</property>
           </object>
           <packing>
             <property name="expand">False</property>

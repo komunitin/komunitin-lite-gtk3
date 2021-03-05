@@ -6,6 +6,7 @@ from gi.repository import Gtk
 from gtk3.dialog_login import DialogLogin
 from gtk3.dialog_loading import DialogLoading
 from gtk3.dialog_preferences import DialogPreferences
+from gtk3.dialog_transfer import DialogTransfer
 
 
 class AppWindow(Gtk.ApplicationWindow):
@@ -123,6 +124,10 @@ class AppWindow(Gtk.ApplicationWindow):
         dialog = DialogPreferences(parent=self)
         dialog.run()
         dialog.destroy()
+
+    def show_dialog_transfer(self):
+        self.dialog_login = DialogTransfer(self, self.access)
+        self.dialog_login.set_modal(True)
 
     def on_account_combo_changed(self, combo):
         pass

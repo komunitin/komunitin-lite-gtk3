@@ -1,7 +1,7 @@
 import threading
 import gi
 
-gi.require_version("Gtk", "3.0") # noqa: E402
+gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, GLib
 
 from utils.api_services import get_account_balance, get_account_statement

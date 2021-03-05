@@ -2,6 +2,8 @@
 
 Basic python GTK3 client for komunitin users.
 
+![Workflow status](https://github.com/XaviP/komunitin-lite-gtk3/workflows/Python_app/badge.svg)
+
 All dependencies are already installed by default in most current GNU/Linux distributions:
 - python >= 3.8 (requests, threading, etc...)
 - PyGObject >= 3.36.0

@@ -1,6 +1,6 @@
 import datetime
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '3.0') # noqa: E402 # noqa: E402
 from gi.repository import Gtk
 
 from gtk3.dialog_login import DialogLogin
@@ -101,9 +101,11 @@ class AppWindow(Gtk.ApplicationWindow):
             self.accs_combo.set_active(0)
             self.net_label.set_text(
                 _("Group") + ": {}".format(self.groups[0]["code"]))
-            show_balance = int(self.balance)*10**(-int(self.currency["decimals"]))
-            self.balance_label.set_text(_("Balance") +
-                ": {} {}".format(show_balance, self.currency["symbol"]))
+            show_balance = int(self.balance)*10**(
+                -int(self.currency["decimals"]))
+            self.balance_label.set_text(
+                _("Balance") + ": {} {}".format(show_balance,
+                                                self.currency["symbol"]))
             self.transfers_liststore.clear()
             for trans in self.transfers:
                 created = datetime.datetime.fromisoformat(

@@ -1,4 +1,6 @@
-import os, json, base64
+import os
+import json
+import base64
 
 KOMUNITIN_DATA_FILE = os.path.join(os.path.expanduser("~"),
                                    '.komunitin_lite/data')

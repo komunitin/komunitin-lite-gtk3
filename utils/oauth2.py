@@ -1,4 +1,6 @@
-import time, requests
+import time
+import requests
+
 from .local_storage import get_local_data, put_local_data, KomunitinFileError
 
 

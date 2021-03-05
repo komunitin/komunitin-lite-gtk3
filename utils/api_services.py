@@ -63,4 +63,3 @@ def get_account_statement(access, group, account_id):
     else:
         print("Error %s: %s" % (resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
-

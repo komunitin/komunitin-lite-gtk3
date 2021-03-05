@@ -1,4 +1,6 @@
-import sys, getpass, datetime
+import sys
+import getpass
+import datetime
 
 from utils.oauth2 import ApiAccess
 from utils.api_services import get_user_accounts, get_account_balance
@@ -41,7 +43,8 @@ def command_line_interface(config):
     except Exception as e:
         print(str(e))
         sys.exit()
-    print(_("Balance") + ": {} {}".format(balance, currency["symbol"]) + " "*10)
+    print(_("Balance") + ": {} {}".format(
+        balance, currency["symbol"]) + " "*10)
     print(_("Getting last transactions") + "...", end='\r', flush=True)
     try:
         transfers = get_account_statement(

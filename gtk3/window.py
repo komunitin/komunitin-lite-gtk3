@@ -101,7 +101,7 @@ class AppWindow(Gtk.ApplicationWindow):
             self.accs_combo.set_active(0)
             self.net_label.set_text(
                 _("Group") + ": {}".format(self.groups[0]["code"]))
-            show_balance = int(self.balance)*10**(
+            show_balance = int(self.balance) * 10 ** (
                 -int(self.currency["decimals"]))
             self.balance_label.set_text(
                 _("Balance") + ": {} {}".format(show_balance,

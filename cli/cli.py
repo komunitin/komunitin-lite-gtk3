@@ -17,7 +17,7 @@ def command_line_interface(config):
     except Exception as e:
         print(str(e))
         sys.exit()
-    print(_("Account") + ": {}".format(members[0]["code"]) + " "*10)
+    print(_("Account") + ": {}".format(members[0]["code"]) + " " * 10)
     print(_("Getting account info") + "...", end='\r', flush=True)
     try:
         balance, currency = get_account_balance(
@@ -26,7 +26,7 @@ def command_line_interface(config):
         print(str(e))
         sys.exit()
     print(_("Balance") + ": {} {}".format(
-        balance, currency["symbol"]) + " "*10)
+        balance, currency["symbol"]) + " " * 10)
     print(_("Getting last transactions") + "...", end='\r', flush=True)
     try:
         transfers = get_account_statement(

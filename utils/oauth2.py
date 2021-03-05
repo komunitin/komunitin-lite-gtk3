@@ -56,8 +56,8 @@ class ApiAccess:
         self.user = kdata["user"] if "user" in kdata else ""
         if "auth" in kdata:
             # check if token is expired
-            expire = int(kdata["auth"]["created"]) + \
-                         int(kdata["auth"]["expires_in"])
+            expire = (int(kdata["auth"]["created"]) +
+                      int(kdata["auth"]["expires_in"]))
             if int(time.time()) > expire:
                 # expired token.
                 return {}

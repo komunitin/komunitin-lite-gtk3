@@ -7,8 +7,9 @@ from gi.repository import Gtk, Gdk, GLib
 
 class DialogLogin(Gtk.Dialog):
     def __init__(self, parent, access):
-        Gtk.Dialog.__init__(self, title=_("Server") + ": " +
-                            access.server["server_name"], transient_for=parent)
+        Gtk.Dialog.__init__(self, title="{}: {}".format(_("Server"),
+                            access.server["server_name"]),
+                            transient_for=parent)
         self.parent = parent
         self.access = access
         self.user = access.user

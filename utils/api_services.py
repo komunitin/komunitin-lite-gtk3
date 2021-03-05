@@ -3,8 +3,8 @@ from .oauth2 import KomunitinNetError
 
 
 def get_user_accounts(access):
-    me_url = access.server["base_api_url"] + \
-      "/social/users/me?include=members,members.account,members.group"
+    me_url = (access.server["base_api_url"] + "/social/users/me" +
+              "?include=members,members.account,members.group")
     members = []
     groups = []
     accounts = []
@@ -33,8 +33,8 @@ def get_user_accounts(access):
 
 
 def get_account_balance(access, group, account):
-    acc_url = access.server["base_api_url"] + \
-      "/accounting/{}/accounts/{}?include=currency"
+    acc_url = (access.server["base_api_url"] + "/accounting/{}/accounts/{}" +
+               "?include=currency")
     resp = requests.get(acc_url.format(group, account), headers=access.headers)
     if resp.status_code == 200:
         account_info = resp.json()
@@ -49,8 +49,8 @@ def get_account_balance(access, group, account):
 
 
 def get_account_statement(access, group, account_id):
-    trans_url = access.server["base_api_url"] + \
-      "/accounting/{}/transfers?filter[account]={}"
+    trans_url = (access.server["base_api_url"] + "/accounting/{}/transfers" +
+                 "?filter[account]={}")
     transfers = []
     resp = requests.get(trans_url.format(group, account_id),
                         headers=access.headers)

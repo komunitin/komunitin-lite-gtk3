@@ -70,9 +70,9 @@ class AppWindow(Gtk.ApplicationWindow):
         self.dialog_login.connect("destroy",
                                   lambda x: self.show_dialog_loading())
 
-    def show_dialog_loading(self):
+    def show_dialog_loading(self, account=None):
         if self.access.has_access:
-            self.dialog_loading = DialogLoading(self, self.access)
+            self.dialog_loading = DialogLoading(self, self.access, account)
             self.dialog_loading.set_modal(True)
             self.dialog_loading.set_decorated(False)
             self.dialog_loading.connect("destroy",
@@ -94,9 +94,12 @@ class AppWindow(Gtk.ApplicationWindow):
             name = (name[:10] + '..') if len(name) > 10 else name
             self.user_label.set_text(_("Name") + ": {}".format(name))
             self.accs_combo.remove_all()
-            for acc in self.accounts:
+            active_index = 0
+            for index, acc in enumerate(self.accounts):
                 self.accs_combo.append_text(acc.acc_code)
-            self.accs_combo.set_active(0)
+                if acc == self.account:
+                    active_index = index
+            self.accs_combo.set_active(active_index)
             self.net_label.set_text(
                 _("Group") + ": {}".format(self.account.group_code))
             show_balance = int(self.account.balance) * 10 ** (
@@ -127,4 +130,11 @@ class AppWindow(Gtk.ApplicationWindow):
         self.dialog_login.set_modal(True)
 
     def on_account_combo_changed(self, combo):
-        pass
+        account = None
+        account_code = combo.get_active_text()
+        for acc in self.accounts:
+            if acc.acc_code == account_code:
+                account = acc
+        if account and account != self.account:
+            self.account = account
+            self.show_dialog_loading(account)

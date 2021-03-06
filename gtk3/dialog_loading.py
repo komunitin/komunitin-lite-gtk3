@@ -8,7 +8,7 @@ from utils.account import get_accounts
 
 
 class DialogLoading(Gtk.Dialog):
-    def __init__(self, parent, access):
+    def __init__(self, parent, access, account=None):
         Gtk.Dialog.__init__(self, title="Loading data", transient_for=parent)
         self.parent = parent
         self.access = access
@@ -23,12 +23,18 @@ class DialogLoading(Gtk.Dialog):
         box.add(self.main_box)
         self.show_all()
 
-        thread = threading.Thread(target=self.get_new_data,
-                                  args=(self.access,))
-        thread.daemon = True
-        thread.start()
+        if not account:
+            thread = threading.Thread(target=self.get_new_user_data,
+                                      args=(self.access,))
+            thread.daemon = True
+            thread.start()
+        else:
+            thread = threading.Thread(target=self.get_account_data,
+                                      args=(self.access, account))
+            thread.daemon = True
+            thread.start()
 
-    def get_new_data(self, access):
+    def get_new_user_data(self, access):
         try:
             accounts = get_accounts(access)
             accounts[0].get_balance(access)
@@ -36,11 +42,25 @@ class DialogLoading(Gtk.Dialog):
         except Exception as e:
             GLib.idle_add(self.error_getting_data, e)
 
-        GLib.idle_add(self.fill_with_new_data, accounts, transfers)
+        GLib.idle_add(self.fill_with_new_user_data, accounts, transfers)
 
-    def fill_with_new_data(self, accounts, transfers):
+    def fill_with_new_user_data(self, accounts, transfers):
         self.parent.accounts = accounts
         self.parent.account = accounts[0]
+        self.parent.transfers = transfers
+        self.destroy()
+
+    def get_account_data(self, access, account):
+        try:
+            account.get_balance(access)
+            transfers = account.get_transfers(access)
+        except Exception as e:
+            GLib.idle_add(self.error_getting_data, e)
+
+        GLib.idle_add(self.fill_with_account_data, account, transfers)
+
+    def fill_with_account_data(self, account, transfers):
+        self.parent.account = account
         self.parent.transfers = transfers
         self.destroy()
 

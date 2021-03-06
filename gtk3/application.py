@@ -37,6 +37,8 @@ class Application(Gtk.Application):
         self.add_action(action)
         builder = Gtk.Builder.new_from_string(MENU_XML, -1)
         self.set_app_menu(builder.get_object("app-menu"))
+
+        # Init access here, in do_activate seems a bad place.
         self.access = ApiAccess(self.config)
 
     def do_activate(self):

@@ -13,13 +13,10 @@ class AppWindow(Gtk.ApplicationWindow):
 
     def __init__(self, *args, access, **kwargs):
         super().__init__(*args, **kwargs)
-        self.access = access
         self.set_default_size(600, 400)
-        self.members = []
+        self.access = access
         self.accounts = []
-        self.groups = []
-        self.balance = 0
-        self.currency = {}
+        self.account = None
         self.transfers = []
 
         # Combo to select account.
@@ -92,27 +89,27 @@ class AppWindow(Gtk.ApplicationWindow):
             dialog.destroy()
 
     def fill_with_data(self):
-        if self.members:
-            name = self.members[0]["name"]
+        if self.account:
+            name = self.account.member_name
             name = (name[:10] + '..') if len(name) > 10 else name
             self.user_label.set_text(_("Name") + ": {}".format(name))
             self.accs_combo.remove_all()
-            for memb in self.members:
-                self.accs_combo.append_text(memb["code"])
+            for acc in self.accounts:
+                self.accs_combo.append_text(acc.acc_code)
             self.accs_combo.set_active(0)
             self.net_label.set_text(
-                _("Group") + ": {}".format(self.groups[0]["code"]))
-            show_balance = int(self.balance) * 10 ** (
-                -int(self.currency["decimals"]))
+                _("Group") + ": {}".format(self.account.group_code))
+            show_balance = int(self.account.balance) * 10 ** (
+                -int(self.account.currency_decimals))
             self.balance_label.set_text(
                 _("Balance") + ": {} {}".format(show_balance,
-                                                self.currency["symbol"]))
+                                                self.account.currency_symbol))
             self.transfers_liststore.clear()
             for trans in self.transfers:
                 created = datetime.datetime.fromisoformat(
                     trans["attributes"]["created"])
                 amount = str(trans["attributes"]["amount"]) + " " + \
-                    self.currency["symbol"]
+                    self.account.currency_symbol
                 self.transfers_liststore.append([
                     created.strftime("%d/%m/%Y"),
                     trans["attributes"]["meta"],

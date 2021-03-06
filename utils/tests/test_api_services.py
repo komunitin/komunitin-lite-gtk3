@@ -24,20 +24,24 @@ class TestApiServices(unittest.TestCase):
         response_mock.status_code = 200
         response_mock.json.return_value = self.me_response
         mock_get.return_value = response_mock
-        members, accounts, groups = get_user_accounts(self.access)
-        self.assertTrue(accounts[0]["id"] ==
-                        'a383a9dc-7ad4-4868-8807-069675c6ad3e')
+        resp = get_user_accounts(self.access)
+        included = resp["included"][0]
+        account_id = included["relationships"]["account"]["data"]["id"]
+        account_code = included["attributes"]["code"]
+        account_link = included["relationships"]["account"]["links"]["related"]
+        self.assertTrue(account_code == 'NET20000')
         response_mock.json.return_value = self.balance_response
         mock_get.return_value = response_mock
-        balance, currency = get_account_balance(self.access,
-                                                groups[0], accounts[0])
+        resp = get_account_balance(self.access, account_link)
+        balance = resp["data"]["attributes"]["balance"]
         self.assertTrue(balance == 130)
 
         response_mock.json.return_value = self.statement_response
         mock_get.return_value = response_mock
-        transfers = get_account_statement(self.access, groups[0],
-                                          accounts[0]["id"])
-        self.assertTrue(transfers[0]["id"] ==
+        group_code = account_link.split("/")[-3]
+        transfers = get_account_statement(self.access, group_code,
+                                          account_id)
+        self.assertTrue(transfers["data"][0]["id"] ==
                         'e2f52ef0-6deb-471a-aeb3-ea10a1b187e2')
 
 

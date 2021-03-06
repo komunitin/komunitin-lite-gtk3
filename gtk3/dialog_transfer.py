@@ -22,7 +22,7 @@ class DialogTransfer(Gtk.Dialog):
         from_account_title = builder.get_object("FromAccountTitle")
         from_account_title.set_text(_("From account") + ":")
         self.from_account_label = builder.get_object("FromAccountLabel")
-        self.from_account_label.set_text("NET1XXXX")
+        self.from_account_label.set_text(self.parent.account.acc_code)
         to_account_title = builder.get_object("ToAccountTitle")
         to_account_title.set_text(_("To account") + ":")
         amount_title = builder.get_object("AmountTitle")
@@ -50,20 +50,20 @@ class DialogTransfer(Gtk.Dialog):
 
     def button_save_clicked(self, button):
         self.error_label.set_text("Under developing")
-        from_account = self.from_account_label
-        to_account = self.to_account_input
-        amount = self.amount_input
-        if not to_account or not amount:
-            self.error_label.set_text("Fill in account and amount")
-        else:
-            self.button_cancel.set_sensitive(False)
-            self.button_save.set_sensitive(False)
-
-            # TODO: check valid account and amount
-            thread = threading.Thread(target=self.check_transaction,
-                                      args=(from_account, to_account, amount))
-            thread.daemon = True
-            thread.start()
+#        from_account = self.from_account_label
+#        to_account = self.to_account_input
+#        amount = self.amount_input
+#        if not to_account or not amount:
+#            self.error_label.set_text("Fill in account and amount")
+#        else:
+#            self.button_cancel.set_sensitive(False)
+#            self.button_save.set_sensitive(False)
+#
+#            # TODO: check valid account and amount
+#            thread = threading.Thread(target=self.check_transaction,
+#                                      args=(from_account, to_account, amount))
+#            thread.daemon = True
+#            thread.start()
 
     def check_transaction(self, from_account, to_account, amount):
         # TODO: send check to server

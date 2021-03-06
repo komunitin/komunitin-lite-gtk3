@@ -56,3 +56,35 @@ class Account:
             if trans["type"] == "transfers":
                 transfers.append(trans)
         return transfers
+
+    def make_transfer(self, access, data):
+        payer = self.acc_code
+        payee = data['payer_account_code']
+        transfer_url = "{}/accounting/{}/trans:fers".format(
+            access.server["api_base_url"], self.currency_name)
+        body = {
+            "data": {
+                "id": data['transaction_id'],
+                "type": "transfers",
+                "attributes": {
+                    "amount": data['amount'],
+                    "meta": data['meta'],
+                    "state": "committed"
+                },
+                "relationships": {
+                    "payer": {
+                        "data": {
+                            "type": "accounts",
+                            "id": payer['data']['id']
+                        }
+                    },
+                    "payee": {
+                        "data": {
+                            "type": "accounts",
+                            "id": payee['data']['id']
+                        }
+                    }
+                }
+            }
+        }
+

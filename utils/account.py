@@ -57,6 +57,9 @@ class Account:
                 transfers.append(trans)
         return transfers
 
+    def check_transfer(self, access, data):
+        pass
+
     def make_transfer(self, access, data):
         data["from_account_id"] = self.acc_id
         # resp = put_transfer(access, data)

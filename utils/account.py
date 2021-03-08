@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from utils.api_services import get_user_accounts, get_account_balance
-from utils.api_services import get_account_statement  # , put_transfer
+from utils.api_services import get_account_transfers, get_unknown_accounts
 from utils.transfer import Transfer
 
 
@@ -54,8 +54,9 @@ class Account:
         self.currency_decimals = resp["included"][0]["attributes"]["decimals"]
 
     def get_transfers(self, access):
-        resp = get_account_statement(access, self.group_code, self.acc_id)
+        resp = get_account_transfers(access, self.group_code, self.acc_id)
         transfers = []
+        unknown_accounts = []
         for trans in resp["data"]:
             if trans["type"] == "transfers":
                 t = Transfer(trans["id"])
@@ -69,13 +70,20 @@ class Account:
                 t.payer_acc_id = trans["relationships"]["payer"]["data"]["id"]
                 if t.payer_acc_id == self.acc_id:
                     t.payer_acc_code = self.acc_code
+                else:
+                    unknown_accounts.append(t.payer_acc_id)
                 t.payee_acc_id = trans["relationships"]["payee"]["data"]["id"]
                 if t.payee_acc_id == self.acc_id:
-                    t.payer_acc_code = self.acc_code
+                    t.payee_acc_code = self.acc_code
+                else:
+                    unknown_accounts.append(t.payee_acc_id)
                 t.currency_id = self.currency_id
                 t.currency_name = self.currency_name
                 t.currency_plural = self.currency_plural
                 t.currency_symbol = self.currency_symbol
                 t.currency_decimals = self.currency_decimals
                 transfers.append(t)
+        # TODO: get unknown accounts
+        # resp2 = get_unknown_accounts(access, self.group_code,
+        #                              unknown_accounts)
         return transfers

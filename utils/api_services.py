@@ -23,11 +23,22 @@ def get_account_balance(access, acc_link):
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
-def get_account_statement(access, group_code, account_id):
+def get_account_transfers(access, group_code, account_id):
     trans_url = (access.server["base_api_url"] + "/accounting/{}/transfers" +
                  "?filter[account]={}")
     resp = requests.get(trans_url.format(group_code, account_id),
                         headers=access.headers)
+    if resp.status_code == 200:
+        return resp.json()
+    else:
+        print("Error %s: %s" % (resp.status_code, resp.text))
+        raise KomunitinNetError(resp.text, resp.status_code)
+
+
+def get_unknown_accounts(access, group_code, account_ids):
+    accounts_url = "{}/social/{}/members?filter[account]={}".format(
+        access.server["base_api_url"], group_code, ','.join(account_ids))
+    resp = requests.get(accounts_url, headers=access.headers)
     if resp.status_code == 200:
         return resp.json()
     else:

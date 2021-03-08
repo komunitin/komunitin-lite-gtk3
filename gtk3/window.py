@@ -109,13 +109,16 @@ class AppWindow(Gtk.ApplicationWindow):
                                                 self.account.currency_symbol))
             self.transfers_liststore.clear()
             for trans in self.transfers:
+                sign_amount = "" if (trans.payee_acc_code ==
+                                     self.account.acc_code) else "-"
                 self.transfers_liststore.append([
                     trans.created.strftime("%d/%m/%Y"),
                     trans.meta,
                     trans.payer_acc_code,
                     trans.payee_acc_code,
                     trans.state,
-                    "{} {}".format(
+                    "{}{} {}".format(
+                        sign_amount,
                         trans.amount * 10 ** -(int(trans.currency_decimals)),
                         trans.currency_symbol
                     )

@@ -35,7 +35,7 @@ def get_account_statement(access, group_code, account_id):
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
-def put_transfer(access, data):
+def post_transfer(access, data):
     transfer_url = "{}/accounting/{}/transfers".format(
         access.server["api_base_url"], data["currency"])
     body = {

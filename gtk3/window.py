@@ -1,4 +1,3 @@
-import datetime
 import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402 # noqa: E402
 from gi.repository import Gtk
@@ -43,10 +42,11 @@ class AppWindow(Gtk.ApplicationWindow):
         self.grid.set_row_homogeneous(True)
         # self.add(self.grid)
 
-        self.transfers_liststore = Gtk.ListStore(str, str, str, str)
+        self.transfers_liststore = Gtk.ListStore(str, str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.transfers_liststore)
         for i, column_title in enumerate(
-            [_("Created"), _("Concept"), _("State"), _("Amount")]
+            [_("Created"), _("Concept"), _("From account"), _("To account"),
+             _("State"), _("Amount")]
         ):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
@@ -109,15 +109,16 @@ class AppWindow(Gtk.ApplicationWindow):
                                                 self.account.currency_symbol))
             self.transfers_liststore.clear()
             for trans in self.transfers:
-                created = datetime.datetime.fromisoformat(
-                    trans["attributes"]["created"])
-                amount = str(trans["attributes"]["amount"]) + " " + \
-                    self.account.currency_symbol
                 self.transfers_liststore.append([
-                    created.strftime("%d/%m/%Y"),
-                    trans["attributes"]["meta"],
-                    trans["attributes"]["state"],
-                    str(amount)
+                    trans.created.strftime("%d/%m/%Y"),
+                    trans.meta,
+                    trans.payer_acc_code,
+                    trans.payee_acc_code,
+                    trans.state,
+                    "{} {}".format(
+                        trans.amount * 10 ** -(int(trans.currency_decimals)),
+                        trans.currency_symbol
+                    )
                 ])
 
     def show_dialog_preferences(self):

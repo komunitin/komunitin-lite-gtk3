@@ -1,6 +1,8 @@
+from datetime import datetime
 
 from utils.api_services import get_user_accounts, get_account_balance
 from utils.api_services import get_account_statement  # , put_transfer
+from utils.transfer import Transfer
 
 
 def get_accounts(access):
@@ -36,6 +38,7 @@ class Account:
         self.group_id = ""
         self.group_code = ""
         self.balance = 0
+        self.currency_id = ""
         self.currency_name = ""
         self.currency_plural = ""
         self.currency_symbol = ""
@@ -44,6 +47,7 @@ class Account:
     def get_balance(self, access):
         resp = get_account_balance(access, self.acc_link)
         self.balance = resp["data"]["attributes"]["balance"]
+        self.currency_id = resp["included"][0]["id"]
         self.currency_name = resp["included"][0]["attributes"]["name"]
         self.currency_plural = resp["included"][0]["attributes"]["namePlural"]
         self.currency_symbol = resp["included"][0]["attributes"]["symbol"]
@@ -54,12 +58,24 @@ class Account:
         transfers = []
         for trans in resp["data"]:
             if trans["type"] == "transfers":
-                transfers.append(trans)
+                t = Transfer(trans["id"])
+                t.amount = trans["attributes"]["amount"]
+                t.meta = trans["attributes"]["meta"]
+                t.state = trans["attributes"]["state"]
+                t.created = datetime.fromisoformat(
+                    trans["attributes"]["created"])
+                t.updated = datetime.fromisoformat(
+                    trans["attributes"]["updated"])
+                t.payer_acc_id = trans["relationships"]["payer"]["data"]["id"]
+                if t.payer_acc_id == self.acc_id:
+                    t.payer_acc_code = self.acc_code
+                t.payee_acc_id = trans["relationships"]["payee"]["data"]["id"]
+                if t.payee_acc_id == self.acc_id:
+                    t.payer_acc_code = self.acc_code
+                t.currency_id = self.currency_id
+                t.currency_name = self.currency_name
+                t.currency_plural = self.currency_plural
+                t.currency_symbol = self.currency_symbol
+                t.currency_decimals = self.currency_decimals
+                transfers.append(t)
         return transfers
-
-    def check_transfer(self, access, data):
-        pass
-
-    def make_transfer(self, access, data):
-        data["from_account_id"] = self.acc_id
-        # resp = put_transfer(access, data)

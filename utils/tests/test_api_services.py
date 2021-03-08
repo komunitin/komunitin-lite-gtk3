@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 import configparser
 
 from utils.api_services import (get_user_accounts, get_account_balance,
-                                get_account_statement)
+                                get_account_transfers)
 from utils.tests.fake_objects import (CONFIG_SERVER, FakeApiAccess,
                                       ME_RESPONSE, BALANCE_RESPONSE,
                                       STATEMENT_RESPONSE)
@@ -39,7 +39,7 @@ class TestApiServices(unittest.TestCase):
         response_mock.json.return_value = self.statement_response
         mock_get.return_value = response_mock
         group_code = account_link.split("/")[-3]
-        transfers = get_account_statement(self.access, group_code,
+        transfers = get_account_transfers(self.access, group_code,
                                           account_id)
         self.assertTrue(transfers["data"][0]["id"] ==
                         'e2f52ef0-6deb-471a-aeb3-ea10a1b187e2')

@@ -25,9 +25,9 @@ class TestApiServices(unittest.TestCase):
         response_mock.json.return_value = self.me_response
         mock_get.return_value = response_mock
         resp = get_user_accounts(self.access)
-        account_id = resp["accounts"][0]["acc_id"]
-        account_code = resp["accounts"][0]["acc_code"]
-        account_link = resp["accounts"][0]["acc_link"]
+        account_id = resp["accounts"][0]["account"]["id"]
+        account_code = resp["accounts"][0]["account"]["code"]
+        account_link = resp["accounts"][0]["account"]["link"]
         self.assertTrue(account_code == 'NET20000')
         response_mock.json.return_value = self.balance_response
         mock_get.return_value = response_mock
@@ -39,7 +39,7 @@ class TestApiServices(unittest.TestCase):
         group_code = account_link.split("/")[-3]
         transfers = get_account_transfers(self.access, group_code,
                                           account_id)
-        self.assertTrue(transfers[0]["transfer_id"] ==
+        self.assertTrue(transfers[0]["id"] ==
                         'e2f52ef0-6deb-471a-aeb3-ea10a1b187e2')
 
 

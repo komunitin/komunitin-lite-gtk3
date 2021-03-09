@@ -90,37 +90,38 @@ class AppWindow(Gtk.ApplicationWindow):
 
     def fill_with_data(self):
         if self.account:
-            name = self.account.member_name
+            name = self.account.member["name"]
             name = (name[:10] + '..') if len(name) > 10 else name
             self.user_label.set_text(_("Name") + ": {}".format(name))
             self.accs_combo.remove_all()
             active_index = 0
             for index, acc in enumerate(self.accounts):
-                self.accs_combo.append_text(acc.acc_code)
+                self.accs_combo.append_text(acc.account["code"])
                 if acc == self.account:
                     active_index = index
             self.accs_combo.set_active(active_index)
             self.net_label.set_text(
-                _("Group") + ": {}".format(self.account.group_code))
+                _("Group") + ": {}".format(self.account.group["code"]))
             show_balance = int(self.account.balance) * 10 ** (
-                -int(self.account.currency_decimals))
+                -int(self.account.currency["decimals"]))
             self.balance_label.set_text(
-                _("Balance") + ": {} {}".format(show_balance,
-                                                self.account.currency_symbol))
+                _("Balance") + ": {} {}".format(
+                    show_balance, self.account.currency["symbol"]))
             self.transfers_liststore.clear()
             for trans in self.transfers:
-                sign_amount = "" if (trans.payee_acc_code ==
-                                     self.account.acc_code) else "-"
+                sign_amount = "" if (trans.payee_account["code"] ==
+                                     self.account.account["code"]) else "-"
                 self.transfers_liststore.append([
                     trans.created.strftime("%d/%m/%Y"),
                     trans.meta,
-                    trans.payer_acc_code,
-                    trans.payee_acc_code,
+                    trans.payer_account["code"],
+                    trans.payee_account["code"],
                     trans.state,
                     "{}{} {}".format(
                         sign_amount,
-                        trans.amount * 10 ** -(int(trans.currency_decimals)),
-                        trans.currency_symbol
+                        trans.amount * 10 ** -(
+                            int(trans.currency["decimals"])),
+                        trans.currency["symbol"]
                     )
                 ])
 
@@ -137,7 +138,7 @@ class AppWindow(Gtk.ApplicationWindow):
         account = None
         account_code = combo.get_active_text()
         for acc in self.accounts:
-            if acc.acc_code == account_code:
+            if acc.account["code"] == account_code:
                 account = acc
         if account and account != self.account:
             self.account = account

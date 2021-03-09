@@ -15,23 +15,28 @@ def get_user_accounts(access):
         }
         for member in r["data"]["relationships"]["members"]["data"]:
             data["accounts"].append({
-                "user_id": data["user_id"],
-                "member_id": member["id"]
+                "user": {"id": data["user_id"]},
+                "member": {"id": member["id"]},
+                "account": {},
+                "group": {},
+                "balance": 0,
+                "currency": {}
             })
         for i in r["included"]:
             if i["type"] == "members":
                 for a in data["accounts"]:
-                    if a["member_id"] == i["id"]:
-                        a["member_name"] = i["attributes"]["name"]
-                        a["member_image"] = i["attributes"]["image"]
-                        a["acc_id"] = \
+                    if a["member"]["id"] == i["id"]:
+                        a["member"]["name"] = i["attributes"]["name"]
+                        a["member"]["image"] = i["attributes"]["image"]
+                        a["account"]["id"] = \
                             i["relationships"]["account"]["data"]["id"]
-                        a["acc_code"] = i["attributes"]["code"]
-                        a["acc_link"] = (i["relationships"]["account"]
-                                         ["links"]["related"])
-                        a["group_id"] = \
+                        a["account"]["code"] = i["attributes"]["code"]
+                        a["account"]["link"] = (i["relationships"]["account"]
+                                                ["links"]["related"])
+                        a["group"]["id"] = \
                             i["relationships"]["group"]["data"]["id"]
-                        a["group_code"] = a["acc_link"].split("/")[-3]
+                        a["group"]["code"] = \
+                            a["account"]["link"].split("/")[-3]
         return data
 
     else:
@@ -46,11 +51,13 @@ def get_account_balance(access, acc_link):
         r = resp.json()
         data = {
             "balance": r["data"]["attributes"]["balance"],
-            "currency_id": r["included"][0]["id"],
-            "currency_name": r["included"][0]["attributes"]["name"],
-            "currency_plural": r["included"][0]["attributes"]["namePlural"],
-            "currency_symbol": r["included"][0]["attributes"]["symbol"],
-            "currency_decimals": r["included"][0]["attributes"]["decimals"],
+            "currency": {
+                "id": r["included"][0]["id"],
+                "name": r["included"][0]["attributes"]["name"],
+                "plural": r["included"][0]["attributes"]["namePlural"],
+                "symbol": r["included"][0]["attributes"]["symbol"],
+                "decimals": r["included"][0]["attributes"]["decimals"],
+            }
         }
         return data
     else:
@@ -69,7 +76,7 @@ def get_account_transfers(access, group_code, account_id):
         for t in r["data"]:
             if t["type"] == "transfers":
                 trans = {
-                    "transfer_id": t["id"],
+                    "id": t["id"],
                     "amount": t["attributes"]["amount"],
                     "meta": t["attributes"]["meta"],
                     "state": t["attributes"]["state"],
@@ -77,9 +84,17 @@ def get_account_transfers(access, group_code, account_id):
                         t["attributes"]["created"]),
                     "updated": datetime.fromisoformat(
                         t["attributes"]["updated"]),
-                    "payer_acc_id": t["relationships"]["payer"]["data"]["id"],
-                    "payee_acc_id": t["relationships"]["payee"]["data"]["id"],
-                    "currency_id": t["relationships"]["currency"]["data"]["id"]
+                    "payer_account": {
+                        "id": t["relationships"]["payer"]["data"]["id"],
+                        "code": ""
+                    },
+                    "payee_account": {
+                        "id": t["relationships"]["payee"]["data"]["id"],
+                        "code": ""
+                    },
+                    "currency": {
+                        "id": t["relationships"]["currency"]["data"]["id"]
+                    }
                 }
                 data.append(trans)
         return data

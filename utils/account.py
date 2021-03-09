@@ -17,52 +17,54 @@ def get_accounts(access):
 
 class Account:
     def __init__(self, user_id):
-        self.user_id = user_id
-        self.member_id = ""
-        self.member_name = ""
-        self.member_image = ""
-        self.acc_id = ""
-        self.acc_code = ""
-        self.acc_link = ""
-        self.group_id = ""
-        self.group_code = ""
+        self.user = {"id": user_id}
+        self.member = {
+            "id": "",
+            "name": "",
+            "image": ""
+        }
+        self.account = {
+            "id": "",
+            "code": "",
+            "link": ""
+        }
+        self.group = {
+            "id": "",
+            "code": ""
+        }
         self.balance = 0
-        self.currency_id = ""
-        self.currency_name = ""
-        self.currency_plural = ""
-        self.currency_symbol = ""
-        self.currency_decimals = 0
+        self.currency = {
+            "id": "",
+            "name": "",
+            "plural": "",
+            "symbol": "",
+            "decimals": 0
+        }
 
     def get_balance(self, access):
-        data = get_account_balance(access, self.acc_link)
+        data = get_account_balance(access, self.account["link"])
         for key, value in data.items():
             setattr(self, key, value)
 
     def get_transfers(self, access):
-        data = get_account_transfers(access, self.group_code, self.acc_id)
+        data = get_account_transfers(access, self.group["code"],
+                                     self.account["id"])
         transfers = []
         unknown_accounts = []
         for trans in data:
-            t = Transfer(trans["transfer_id"])
+            t = Transfer(trans["id"])
             for key, value in trans.items():
                 setattr(t, key, value)
-            if t.payer_acc_id == self.acc_id:
-                t.payer_acc_code = self.acc_code
+            if t.payer_account["id"] == self.account["id"]:
+                t.payer_account["code"] = self.account["code"]
             else:
-                unknown_accounts.append(t.payer_acc_id)
-            if t.payee_acc_id == self.acc_id:
-                t.payee_acc_code = self.acc_code
+                unknown_accounts.append(t.payer_account["id"])
+            if t.payee_account["id"] == self.account["id"]:
+                t.payee_account["code"] = self.account["code"]
             else:
-                unknown_accounts.append(t.payee_acc_id)
-            if t.currency_id == self.currency_id:
-                t.currency_name = self.currency_name
-                t.currency_plural = self.currency_plural
-                t.currency_symbol = self.currency_symbol
-                t.currency_decimals = self.currency_decimals
-            else:
-                # transfer currency is not the same as account.
-                # could this happen ??
-                pass
+                unknown_accounts.append(t.payee_account["id"])
+            if t.currency["id"] == self.currency["id"]:
+                t.currency = self.currency
 
             transfers.append(t)
 

@@ -25,7 +25,7 @@ class DialogTransfer(Gtk.Dialog):
         to_account_title = builder.get_object("ToAccountTitle")
         to_account_title.set_text(_("To account") + ":")
         self.to_account_label = builder.get_object("ToAccountLabel")
-        self.to_account_label.set_text(self.parent.account.acc_code)
+        self.to_account_label.set_text(self.parent.account.account["code"])
         amount_title = builder.get_object("AmountTitle")
         amount_title.set_text(_("Amount") + ":")
         concept_title = builder.get_object("ConceptTitle")
@@ -55,7 +55,6 @@ class DialogTransfer(Gtk.Dialog):
 
     def button_save_clicked(self, button):
         from_account = self.from_account_input.get_text().strip()
-        to_account = self.to_account_label.get_text().strip()
         amount = self.amount_input.get_text().strip().replace(',', '.')
         meta = self.concept_buffer.get_text(
             self.concept_buffer.get_start_iter(),
@@ -74,25 +73,19 @@ class DialogTransfer(Gtk.Dialog):
             self.error_label.set_text(_("Checking transfer data") + "...")
             self.button_cancel.set_sensitive(False)
             self.button_save.set_sensitive(False)
-            data = {
-                "from_account": from_account,
-                "to_account": to_account,
-                "amount": amount,
-                "meta": meta
-            }
+            new_transfer = self.parent.account.create_new_transfer(
+                from_account, amount, meta)
             thread = threading.Thread(
-                target=self.check_transaction_data, args=(data,))
+                target=self.check_transaction_data, args=(new_transfer,))
             thread.daemon = True
             thread.start()
 
-    def check_transaction_data(self, data):
-        # TODO: send check to server
-        ok, error = (True, None)
+    def check_transaction_data(self, transfer):
+        ok, error = transfer.check_data(self.parent.access)
         if not ok:
             GLib.idle_add(self.check_wrong, error)
-
         else:
-            GLib.idle_add(self.check_ok)
+            GLib.idle_add(self.check_ok, transfer)
 
     def check_wrong(self, error):
         # TODO: Show what's wrong
@@ -101,7 +94,7 @@ class DialogTransfer(Gtk.Dialog):
         self.button_cancel.set_sensitive(True)
         self.button_save.set_sensitive(True)
 
-    def check_ok(self):
+    def check_ok(self, transfer):
         # TODO: Send real transaction
         self.error_label.set_text("Data is ok")
         # self.destroy()

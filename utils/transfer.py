@@ -1,11 +1,11 @@
 
-from utils.api_services import post_transfer
+from utils.api_services import check_account, post_transfer
 
 
 class Transfer:
     def __init__(self, transfer_id=None):
         self.id = transfer_id
-        self.amount = ""
+        self.amount = 0
         self.meta = ""
         self.state = ""
         self.created = ""
@@ -26,8 +26,9 @@ class Transfer:
             "decimals": ""
         }
 
-    def check_transfer(self, access, data):
-        pass
+    def check_data(self, access):
+        account_data = check_account(access, self.payer_account["code"])
+        return True, None
 
     def make_transfer(self, access, data):
         data["from_account_id"] = self.acc_id

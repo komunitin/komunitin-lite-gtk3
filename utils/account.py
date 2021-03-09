@@ -1,3 +1,5 @@
+import uuid
+
 from utils.api_services import get_user_accounts, get_account_balance
 from utils.api_services import get_account_transfers  # , get_unknown_accounts
 from utils.transfer import Transfer
@@ -72,3 +74,18 @@ class Account:
         # resp2 = get_unknown_accounts(access, self.group_code,
         #                              unknown_accounts)
         return transfers
+
+    def create_new_transfer(self, from_account, amount, meta):
+        trans = Transfer(str(uuid.uuid4()))
+        trans.amount = amount
+        trans.meta = meta
+        trans.payer_account = {
+            "id": "",
+            "code": from_account
+        }
+        trans.payee_account = {
+            "id": self.account["id"],
+            "code": self.account["code"]
+        }
+        trans.currency = self.currency
+        return trans

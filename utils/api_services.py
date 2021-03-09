@@ -114,6 +114,11 @@ def get_unknown_accounts(access, group_code, account_ids):
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
+def check_account(access, account):
+    # It has to return the account info (account id, member name, etc...)
+    pass
+
+
 def post_transfer(access, data):
     transfer_url = "{}/accounting/{}/transfers".format(
         access.server["api_base_url"], data["currency"])

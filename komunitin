@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import os, sys, configparser
+import os
+import sys
+import configparser
 import gettext
 
 from utils.local_storage import get_local_data
@@ -30,8 +32,9 @@ if __name__ == "__main__":
     language.install()
 
     if "--cli" in sys.argv:
-        from cli.cli import command_line_interface
-        command_line_interface(config)
+        from cli.cli import CommandLineInterface
+        cli = CommandLineInterface(config)
+        cli.run()
     else:
         from gtk3.application import Application
         app = Application(config=config)

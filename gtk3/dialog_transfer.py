@@ -76,11 +76,11 @@ class DialogTransfer(Gtk.Dialog):
             new_transfer = self.parent.account.create_new_transfer(
                 from_account, amount, meta)
             thread = threading.Thread(
-                target=self.check_transaction_data, args=(new_transfer,))
+                target=self.check_transfer, args=(new_transfer,))
             thread.daemon = True
             thread.start()
 
-    def check_transaction_data(self, transfer):
+    def check_transfer(self, transfer):
         ok, error = transfer.check_data(self.parent.access)
         if not ok:
             GLib.idle_add(self.check_wrong, error)
@@ -89,12 +89,32 @@ class DialogTransfer(Gtk.Dialog):
 
     def check_wrong(self, error):
         # TODO: Show what's wrong
-        self.error_label.set_text("Wrong data")
+        self.error_label.set_text(_("Wrong data"))
         print(error)
         self.button_cancel.set_sensitive(True)
         self.button_save.set_sensitive(True)
 
     def check_ok(self, transfer):
+        self.error_label.set_text(_("Data is ok. Sending transfer") + "...")
+        thread = threading.Thread(
+            target=self.send_transaction, args=(transfer,))
+        thread.daemon = True
+        thread.start()
+
+    def send_transfer(self, transfer):
         # TODO: Send real transaction
-        self.error_label.set_text("Data is ok")
+        ok, error = transfer.make_transfer(self.parent.access)
+        if not ok:
+            GLib.idle_add(self.send_wrong, error)
+        else:
+            GLib.idle_add(self.send_ok, transfer)
+
+    def send_wrong(self, error):
+        self.error_label.set_text(_("Something was wrong sending transfer"))
+        print(error)
+        self.button_cancel.set_sensitive(True)
+        self.button_save.set_sensitive(True)
+
+    def send_ok(self, transfer):
+        self.error_label.set_text(_("Transfer done."))
         # self.destroy()

@@ -19,6 +19,9 @@ def get_accounts(access):
 
 class Account:
     def __init__(self, user_id):
+        """Class Account
+        constructor holding user_id and setting up all properties
+        """
         self.user = {"id": user_id}
         self.member = {
             "id": "",
@@ -44,11 +47,26 @@ class Account:
         }
 
     def get_balance(self, access):
+        """Method to read balance and currency of the account
+
+        Parameters:
+        access (ApiAccess object): needed to use auth headers
+        Returns:
+        nothing (just fill in some object properties)
+        """
         data = get_account_balance(access, self.account["link"])
         for key, value in data.items():
             setattr(self, key, value)
 
     def get_transfers(self, access):
+        """Method to read last transfers of the account
+           (it needs to make a second call for unknown accounts)
+
+        Parameters:
+        access (ApiAccess object): needed to use auth headers
+        Returns:
+        A list of Transfer objects
+        """
         data = get_account_transfers(access, self.group["code"],
                                      self.account["id"])
         transfers = []
@@ -76,6 +94,15 @@ class Account:
         return transfers
 
     def create_new_transfer(self, from_account, amount, meta):
+        """Method to create a new transfer object with account object data
+
+        Parameters:
+        from_account: str (account code)
+        amount: float
+        meta: str (concept of new transfer)
+        Return:
+        Transfer object
+        """
         trans = Transfer(str(uuid.uuid4()))
         trans.amount = amount
         trans.meta = meta

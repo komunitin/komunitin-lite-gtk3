@@ -5,7 +5,7 @@ import sys
 import configparser
 import gettext
 
-from utils.local_storage import get_local_data
+from core.local_storage import get_local_data
 
 
 if __name__ == "__main__":

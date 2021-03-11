@@ -5,7 +5,7 @@ from glob import glob
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, Gdk
 
-from utils.local_storage import get_local_data, put_local_data
+from core.local_storage import get_local_data, put_local_data
 
 
 class DialogPreferences(Gtk.Dialog):

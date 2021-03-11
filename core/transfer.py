@@ -1,5 +1,5 @@
 
-from utils.api_services import check_account, post_transfer
+from core.api_services import check_account, post_transfer
 
 
 class Transfer:

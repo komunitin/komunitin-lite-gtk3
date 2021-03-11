@@ -3,8 +3,8 @@ from unittest.mock import Mock, patch
 import configparser
 import time
 
-from utils.oauth2 import ApiAccess
-from utils.tests.fake_objects import CONFIG_SERVER, SERVER_OAUTH2_RESPONSE
+from core.oauth2 import ApiAccess
+from core.tests.fake_objects import CONFIG_SERVER, SERVER_OAUTH2_RESPONSE
 
 
 class TestOauth2(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestOauth2(unittest.TestCase):
         }
         self.local_data["auth"]["created"] = int(time.time())
 
-    @patch('utils.oauth2.get_local_data')
+    @patch('core.oauth2.get_local_data')
     def test_init_no_data(self, mock_get_data):
         mock_get_data.return_value = {}
         access = ApiAccess(self.test_config)
@@ -26,9 +26,9 @@ class TestOauth2(unittest.TestCase):
         self.assertTrue(access._auth == {})
         self.assertTrue(access.has_access is False)
 
-    @patch('utils.oauth2.requests.post')
-    @patch('utils.oauth2.put_local_data')
-    @patch('utils.oauth2.get_local_data')
+    @patch('core.oauth2.requests.post')
+    @patch('core.oauth2.put_local_data')
+    @patch('core.oauth2.get_local_data')
     def test_init_with_data(self, mock_get_data, mock_put_data, mock_post):
         # token expired
         self.local_data["auth"]["created"] = 0
@@ -52,9 +52,9 @@ class TestOauth2(unittest.TestCase):
                         self.server_oauth2_response["access_token"])
         self.assertTrue(access2.has_access is True)
 
-    @patch('utils.oauth2.requests.post')
-    @patch('utils.oauth2.put_local_data')
-    @patch('utils.oauth2.get_local_data')
+    @patch('core.oauth2.requests.post')
+    @patch('core.oauth2.put_local_data')
+    @patch('core.oauth2.get_local_data')
     def test_new_access(self, mock_get_data, mock_put_data, mock_post):
         # No data
         mock_get_data.return_value = {}

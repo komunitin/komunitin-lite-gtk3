@@ -1,8 +1,8 @@
 import sys
 import getpass
 
-from utils.oauth2 import ApiAccess
-from utils.account import get_user_accounts
+from core.oauth2 import ApiAccess
+from core.account import get_user_accounts
 
 
 class CommandLineInterface:

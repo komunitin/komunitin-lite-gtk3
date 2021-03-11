@@ -1,8 +1,8 @@
 import uuid
 
-from utils.api_services import get_user_accounts, get_account_balance
-from utils.api_services import get_account_transfers  # , get_unknown_accounts
-from utils.transfer import Transfer
+from core.api_services import get_user_accounts, get_account_balance
+from core.api_services import get_account_transfers  # , get_unknown_accounts
+from core.transfer import Transfer
 
 
 def get_accounts(access):

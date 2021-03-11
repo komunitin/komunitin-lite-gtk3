@@ -6,7 +6,7 @@ from gi.repository import Gtk
 
 from gtk3.window import AppWindow
 from gtk3.menu import MENU_XML
-from utils.oauth2 import ApiAccess
+from core.oauth2 import ApiAccess
 
 
 class Application(Gtk.Application):

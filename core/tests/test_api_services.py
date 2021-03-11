@@ -2,11 +2,11 @@ import unittest
 from unittest.mock import Mock, patch
 import configparser
 
-from utils.api_services import (get_user_accounts, get_account_balance,
-                                get_account_transfers)
-from utils.tests.fake_objects import (CONFIG_SERVER, FakeApiAccess,
-                                      ME_RESPONSE, BALANCE_RESPONSE,
-                                      STATEMENT_RESPONSE)
+from core.api_services import (get_user_accounts, get_account_balance,
+                               get_account_transfers)
+from core.tests.fake_objects import (CONFIG_SERVER, FakeApiAccess,
+                                     ME_RESPONSE, BALANCE_RESPONSE,
+                                     STATEMENT_RESPONSE)
 
 
 class TestApiServices(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestApiServices(unittest.TestCase):
         self.balance_response = BALANCE_RESPONSE
         self.statement_response = STATEMENT_RESPONSE
 
-    @patch('utils.api_services.requests.get')
+    @patch('core.api_services.requests.get')
     def test_user_accounts(self, mock_get):
         response_mock = Mock()
         response_mock.status_code = 200

@@ -4,7 +4,7 @@ import gi
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, GLib
 
-from utils.account import get_accounts
+from core.account import get_accounts
 
 
 class DialogLoading(Gtk.Dialog):

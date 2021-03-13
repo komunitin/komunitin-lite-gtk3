@@ -16,6 +16,7 @@ class CommandLineInterface:
     def run(self):
         print("Connecting...", end='\r', flush=True)
         self.access = ApiAccess(self.config)
+        self.access.get_local_auth()
         if not self.access.has_access:
             self._authenticate()
         self._get_accounts()

@@ -40,6 +40,7 @@ class Application(Gtk.Application):
 
         # Init access here, in do_activate seems a bad place.
         self.access = ApiAccess(self.config)
+        self.access.get_local_auth()
 
     def do_activate(self):
         if not self.window:

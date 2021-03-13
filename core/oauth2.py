@@ -22,6 +22,9 @@ class ApiAccess:
         self.has_access = False
         self.headers = {}
         self.user = ""
+        self._auth = {}
+
+    def get_local_auth(self):
         self._auth = self._read_initial_auth()
         if self._auth:
             # valid token, so try to refresh it.

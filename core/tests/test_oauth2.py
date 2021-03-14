@@ -2,16 +2,20 @@ import unittest
 from unittest.mock import Mock, patch
 import configparser
 import time
+import json
+import os
 
 from core.oauth2 import ApiAccess
-from core.tests.fake_objects import CONFIG_SERVER, SERVER_OAUTH2_RESPONSE
+from core.tests.fake_objects import CONFIG_SERVER
 
 
 class TestOauth2(unittest.TestCase):
     def setUp(self):
         self.test_config = configparser.ConfigParser()
         self.test_config['server'] = CONFIG_SERVER
-        self.server_oauth2_response = SERVER_OAUTH2_RESPONSE
+        di = os.path.dirname(__file__)
+        with open(os.path.join(di, 'json/oauth2_response.json'), 'r') as f:
+            self.server_oauth2_response = json.load(f)
         self.local_data = {
             'user': 'user@test.server.com',
             'auth': self.server_oauth2_response

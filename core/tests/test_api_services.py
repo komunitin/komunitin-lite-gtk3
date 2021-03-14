@@ -15,6 +15,8 @@ class TestApiServices(unittest.TestCase):
         self.test_config['server'] = CONFIG_SERVER
         self.access = FakeApiAccess(self.test_config)
         di = os.path.dirname(__file__)
+        with open(os.path.join(di, 'json/oauth2_response.json'), 'r') as f:
+            self.access._auth = json.load(f)
         with open(os.path.join(di, 'json/me_response.json'), 'r') as f:
             self.me_response = json.load(f)
         with open(os.path.join(di, 'json/balance_response.json'), 'r') as f:

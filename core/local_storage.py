@@ -14,11 +14,15 @@ class KomunitinFileError(Exception):
 
 def get_local_data(config=False):
     local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
+    if config:
+        return _read_data(local_file, ofuscated=False)
     return _read_data(local_file)
 
 
 def put_local_data(komunitin_data, config=False):
     local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
+    if config:
+        return _write_data(komunitin_data, local_file, ofuscated=False)
     return _write_data(komunitin_data, local_file)
 
 
@@ -41,13 +45,14 @@ def _decode(key, enc):
     return "".join(dec)
 
 
-def _read_data(local_file):
+def _read_data(local_file, ofuscated=True):
     komunitin_data = {}
     if os.path.isfile(local_file):
         try:
             with open(local_file, "r") as f:
                 data = f.read()
-            data = _decode("ofuscation", data)
+            if ofuscated:
+                data = _decode("ofuscated", data)
             komunitin_data = json.loads(data)
         except Exception as e:
             print("Something wrong reading local data: %s" % e)
@@ -56,7 +61,7 @@ def _read_data(local_file):
     return komunitin_data
 
 
-def _write_data(komunitin_data, local_file):
+def _write_data(komunitin_data, local_file, ofuscated=True):
 
     # Only first time
     if not os.path.exists(os.path.dirname(local_file)):
@@ -68,7 +73,8 @@ def _write_data(komunitin_data, local_file):
 
     try:
         data = json.dumps(komunitin_data)
-        data = _encode("ofuscation", data)
+        if ofuscated:
+            data = _encode("ofuscated", data)
         with open(local_file, "w") as f:
             f.write(data)
     except Exception as e:

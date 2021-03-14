@@ -13,17 +13,15 @@ class KomunitinFileError(Exception):
 
 
 def get_local_data(config=False):
-    local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
     if config:
-        return _read_data(local_file, ofuscated=False)
-    return _read_data(local_file)
+        return _read_data(KOMUNITIN_CONFIG_FILE, ofuscated=False)
+    return _read_data(KOMUNITIN_DATA_FILE)
 
 
-def put_local_data(komunitin_data, config=False):
-    local_file = KOMUNITIN_CONFIG_FILE if config else KOMUNITIN_DATA_FILE
+def put_local_data(data, config=False):
     if config:
-        return _write_data(komunitin_data, local_file, ofuscated=False)
-    return _write_data(komunitin_data, local_file)
+        return _write_data(data, KOMUNITIN_CONFIG_FILE, ofuscated=False)
+    return _write_data(data, KOMUNITIN_DATA_FILE)
 
 
 def _encode(key, clear):

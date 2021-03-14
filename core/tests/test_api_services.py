@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import Mock, patch
 import configparser
+import json
+import os
 
 from core.api_services import (get_user_accounts, get_account_balance,
                                get_account_transfers)
-from core.tests.fake_objects import (CONFIG_SERVER, FakeApiAccess,
-                                     ME_RESPONSE, BALANCE_RESPONSE,
-                                     STATEMENT_RESPONSE)
+from core.tests.fake_objects import CONFIG_SERVER, FakeApiAccess
 
 
 class TestApiServices(unittest.TestCase):
@@ -14,9 +14,13 @@ class TestApiServices(unittest.TestCase):
         self.test_config = configparser.ConfigParser()
         self.test_config['server'] = CONFIG_SERVER
         self.access = FakeApiAccess(self.test_config)
-        self.me_response = ME_RESPONSE
-        self.balance_response = BALANCE_RESPONSE
-        self.statement_response = STATEMENT_RESPONSE
+        di = os.path.dirname(__file__)
+        with open(os.path.join(di, 'json/me_response.json'), 'r') as f:
+            self.me_response = json.load(f)
+        with open(os.path.join(di, 'json/balance_response.json'), 'r') as f:
+            self.balance_response = json.load(f)
+        with open(os.path.join(di, 'json/transfers_response.json'), 'r') as f:
+            self.transfers_response = json.load(f)
 
     @patch('core.api_services.requests.get')
     def test_user_accounts(self, mock_get):
@@ -34,7 +38,7 @@ class TestApiServices(unittest.TestCase):
         resp = get_account_balance(self.access, account_link)
         self.assertTrue(resp["balance"] == 130)
 
-        response_mock.json.return_value = self.statement_response
+        response_mock.json.return_value = self.transfers_response
         mock_get.return_value = response_mock
         group_code = account_link.split("/")[-3]
         transfers = get_account_transfers(self.access, group_code,

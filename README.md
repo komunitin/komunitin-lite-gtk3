@@ -14,11 +14,17 @@ You can choose your configuration (server) by copying the config_default.ini fil
 
 and edit the `config.ini` file.
 
-Clone and run `python3 komunitin`
+
+To run `python3 komunitin`
 
 (or `python3 komunitin --cli` for command line interface)
 
+
 To run tests: `python3 -m unittest`
+
+
+You can develop another UI with the core. See README in core/
+
 
 #### TODO
 - Transfers pagination

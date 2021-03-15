@@ -13,5 +13,24 @@ It works with three main objects:
 - Transfer: get all transfer data.
   Public methods: check_data(access), make_transfer(access)
 
-See cli/cli.py for a simple implementation.
+
+A simple implementation:
+
+    from core.oauth2 import ApiAccess
+    from core.account import get_acconts
+    
+    access = ApiAccess(config)
+    access.new_access("user", "password")  # fills in access object with headers
+    accounts = get_accounts(access)  # this returns a list of account objects of the user
+    account = accounts[0]
+    print(account.account["code"]
+    account.get_balance(access)  # fills in account object with balance and currency
+    print("{} {}".format(account.balance, account.currency["name"]))
+    transfers = account.get_transfers(access) # return a list of transfer objects
+    for trans in transfers:
+        print("{} {}".format(trans.amount, trans.currency["name"])
+
+
+The methods that make calls to komunitin server must be async or in a new
+thread, in order to maintain the UI not frozen.
 

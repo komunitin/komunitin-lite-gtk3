@@ -1,8 +1,8 @@
+import threading
 
 import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402
-from gi.repository import Gio
-from gi.repository import Gtk
+from gi.repository import Gio, GLib, Gtk
 
 from gtk3.window import AppWindow
 from gtk3.menu import MENU_XML
@@ -38,11 +38,8 @@ class Application(Gtk.Application):
         builder = Gtk.Builder.new_from_string(MENU_XML, -1)
         self.set_app_menu(builder.get_object("app-menu"))
 
-        # Init access here, in do_activate seems a bad place.
-        self.access = ApiAccess(self.config)
-        self.access.get_local_auth()
-
     def do_activate(self):
+        self.access = ApiAccess(self.config)
         if not self.window:
             self.window = AppWindow(
                 application=self,
@@ -51,6 +48,17 @@ class Application(Gtk.Application):
             )
             self.add_window(self.window)
         self.window.show_all()
+
+        # Try to read local data & refresh token in a new thread.
+        thread = threading.Thread(target=self.get_local_data)
+        thread.daemon = True
+        thread.start()
+
+    def get_local_data(self):
+        self.access.get_local_auth()
+        GLib.idle_add(self.start_login_or_loading_dialog)
+
+    def start_login_or_loading_dialog(self):
         if not self.access.has_access:
             self.window.show_dialog_login()
         else:

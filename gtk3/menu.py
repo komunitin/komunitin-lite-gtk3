@@ -1,29 +1,24 @@
+import gi
+gi.require_version('Gtk', '3.0')  # noqa: E402
+from gi.repository import Gio
 
-MENU_XML = """
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
-  <menu id="app-menu">
-    <section>
-      <item>
-        <attribute name="action">app.new_user</attribute>
-        <attribute name="label" translatable="yes">_New user</attribute>
-      </item>
-      <item>
-        <attribute name="action">app.make_transfer</attribute>
-        <attribute name="label" translatable="yes">_Make transfer</attribute>
-      </item>
-      <item>
-        <attribute name="action">app.preferences</attribute>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="action">app.quit</attribute>
-        <attribute name="label" translatable="yes">_Quit</attribute>
-        <attribute name="accel">&lt;Primary&gt;q</attribute>
-    </item>
-    </section>
-  </menu>
-</interface>
-"""
+
+def build_menu():
+    # root of the menu
+    menu_model = Gio.Menu.new()
+
+    # menu items
+    menu_item_1 = Gio.MenuItem.new(_('New user'), 'app.new_user')
+    menu_item_2 = Gio.MenuItem.new(_('New transfer'), 'app.make_transfer')
+    menu_item_3 = Gio.MenuItem.new(_('Preferences'), 'app.preferences')
+    menu_item_4 = Gio.MenuItem.new(_('Quit'), 'app.quit')
+
+    # sub-menu "Menu" with menu items
+    menu_actions = Gio.Menu.new()
+    menu_actions.append_item(menu_item_1)
+    menu_actions.append_item(menu_item_2)
+    menu_actions.append_item(menu_item_3)
+    menu_actions.append_item(menu_item_4)
+    menu_model.append_submenu(_('Menu'), menu_actions)
+
+    return menu_model

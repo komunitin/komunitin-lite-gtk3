@@ -1,7 +1,8 @@
 import gi
-gi.require_version('Gtk', '3.0')  # noqa: E402 # noqa: E402
+gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gtk
 
+from gtk3.menu import build_menu
 from gtk3.dialog_login import DialogLogin
 from gtk3.dialog_loading import DialogLoading
 from gtk3.dialog_preferences import DialogPreferences
@@ -17,6 +18,10 @@ class AppWindow(Gtk.ApplicationWindow):
         self.accounts = []
         self.account = None
         self.transfers = []
+
+        # Menu
+        menu_model = build_menu()
+        self.menubar = Gtk.MenuBar.new_from_model(menu_model)
 
         # Combo to select account.
         self.accs_combo = Gtk.ComboBoxText()
@@ -59,6 +64,7 @@ class AppWindow(Gtk.ApplicationWindow):
         self.scrollable_treelist.add(self.treeview)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        vbox.pack_start(self.menubar, False, False, 0)
         vbox.pack_start(hbox, False, False, 0)
         vbox.pack_start(self.grid, True, True, 0)
 

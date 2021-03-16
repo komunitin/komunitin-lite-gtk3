@@ -5,7 +5,6 @@ gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gio, GLib, Gtk
 
 from gtk3.window import AppWindow
-from gtk3.menu import MENU_XML
 from core.oauth2 import ApiAccess
 
 
@@ -35,8 +34,6 @@ class Application(Gtk.Application):
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.on_quit)
         self.add_action(action)
-        builder = Gtk.Builder.new_from_string(MENU_XML, -1)
-        self.set_app_menu(builder.get_object("app-menu"))
 
     def do_activate(self):
         self.access = ApiAccess(self.config)

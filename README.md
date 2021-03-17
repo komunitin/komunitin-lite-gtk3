@@ -5,7 +5,7 @@ Basic python GTK3 client for komunitin users.
 ![Workflow status](https://github.com/XaviP/komunitin-lite-gtk3/workflows/Python_app/badge.svg)
 
 All dependencies are already installed by default in most current GNU/Linux distributions:
-- python >= 3.8 (requests, threading, etc...)
+- python >= 3.7 (with requests, threading, etc...)
 - PyGObject >= 3.36.0
 
 You can choose your configuration (server) by copying the config_default.ini file: 
@@ -15,15 +15,15 @@ You can choose your configuration (server) by copying the config_default.ini fil
 and edit the `config.ini` file.
 
 
-To run `python3 komunitin`
+To run `python3 komunitin_lite`
 
-(or `python3 komunitin --cli` for command line interface)
+(or `python3 komunitin_lite --cli` for command line interface)
 
 
 To run tests: `python3 -m unittest`
 
 
-You can develop another UI with the core. See README in core/
+You can develop another UI with the core. See [core/README.md](https://github.com/XaviP/komunitin-lite-gtk3/blob/master/core/README.md).
 
 
 #### TODO

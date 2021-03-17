@@ -11,7 +11,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
-    name='komunitin-lite-gtk3',
+    name='komunitin-lite',
     version='0.0.1',
     description='Basic python GTK3 client for komunitin users',
     long_description=long_description,
@@ -37,6 +37,6 @@ setup(
     install_requires=['requests'],
     project_urls={
         'Bug Reports': 'https://github.com/XaviP/komunitin-lite-gtk3/issues',
-        'Source': 'https://github.com/XaviP/komunitin-lite-gtk3/issues',
+        'Source': 'https://github.com/XaviP/komunitin-lite-gtk3',
     },
 )

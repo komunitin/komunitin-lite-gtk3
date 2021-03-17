@@ -3,4 +3,4 @@
 # pip3 list | grep "PyGObject\|requests"
 
 # PyGObject>=3.36.0
-# requests>=2.22.0
+requests

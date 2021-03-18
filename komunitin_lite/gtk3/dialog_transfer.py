@@ -16,7 +16,8 @@ class DialogTransfer(Gtk.Dialog):
         self.user = access.user
 
         builder = Gtk.Builder()
-        builder.add_from_file("gtk3/glade/dialog_transfer.glade")
+        builder.add_from_file(
+            "komunitin_lite/gtk3/glade/dialog_transfer.glade")
         self.main_box = builder.get_object("MainBox")
 
         self.error_label = builder.get_object("ErrorLabel")

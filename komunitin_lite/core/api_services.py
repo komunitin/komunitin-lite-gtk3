@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 
-from core.oauth2 import KomunitinNetError
+from komunitin_lite.core.oauth2 import KomunitinNetError
 
 
 def get_user_accounts(access):

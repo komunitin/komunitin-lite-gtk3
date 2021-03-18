@@ -1,8 +1,8 @@
 import time
 import requests
 
-from core.local_storage import (get_local_data, put_local_data,
-                                KomunitinFileError)
+from komunitin_lite.core.local_storage import (
+    get_local_data, put_local_data, KomunitinFileError)
 
 
 class KomunitinNetError(Exception):

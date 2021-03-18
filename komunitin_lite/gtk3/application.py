@@ -4,8 +4,8 @@ import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gio, GLib, Gtk
 
-from gtk3.window import AppWindow
-from core.oauth2 import ApiAccess
+from komunitin_lite.gtk3.window import AppWindow
+from komunitin_lite.core.oauth2 import ApiAccess
 
 
 class Application(Gtk.Application):

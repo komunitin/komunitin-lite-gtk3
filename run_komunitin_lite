@@ -5,13 +5,13 @@ import sys
 import configparser
 import gettext
 
-from core.local_storage import get_local_data
+from komunitin_lite.core.local_storage import get_local_data
 
 
 if __name__ == "__main__":
-    config_file = "config.ini"
+    config_file = "komunitin_lite/config.ini"
     if not os.path.isfile(config_file):
-        config_file = "config_default.ini"
+        config_file = "komunitin_lite/config_default.ini"
     config = configparser.ConfigParser()
     try:
         config.read(config_file)
@@ -28,14 +28,15 @@ if __name__ == "__main__":
         sys.exit()
 
     lang = local_config.get('language', 'en')
-    language = gettext.translation('base', localedir='po', languages=[lang])
+    language = gettext.translation('base', localedir='komunitin_lite/po',
+                                   languages=[lang])
     language.install()
 
     if "--cli" in sys.argv:
-        from cli.cli import CommandLineInterface
+        from komunitin_lite.cli.cli import CommandLineInterface
         cli = CommandLineInterface(config)
         cli.run()
     else:
-        from gtk3.application import Application
+        from komunitin_lite.gtk3.application import Application
         app = Application(config=config)
         app.run(sys.argv)

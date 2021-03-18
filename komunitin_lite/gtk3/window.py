@@ -2,11 +2,11 @@ import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gtk
 
-from gtk3.menu import build_menu
-from gtk3.dialog_login import DialogLogin
-from gtk3.dialog_loading import DialogLoading
-from gtk3.dialog_preferences import DialogPreferences
-from gtk3.dialog_transfer import DialogTransfer
+from komunitin_lite.gtk3.menu import build_menu
+from komunitin_lite.gtk3.dialog_login import DialogLogin
+from komunitin_lite.gtk3.dialog_loading import DialogLoading
+from komunitin_lite.gtk3.dialog_preferences import DialogPreferences
+from komunitin_lite.gtk3.dialog_transfer import DialogTransfer
 
 
 class AppWindow(Gtk.ApplicationWindow):

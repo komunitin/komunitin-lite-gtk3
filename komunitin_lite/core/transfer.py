@@ -1,5 +1,5 @@
 
-from core.api_services import check_account, post_transfer
+from komunitin_lite.core.api_services import check_account, post_transfer
 
 
 class Transfer:

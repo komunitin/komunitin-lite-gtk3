@@ -4,7 +4,7 @@ import gi
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, GLib
 
-from core.account import get_accounts
+from komunitin_lite.core.account import get_accounts
 
 
 class DialogLoading(Gtk.Dialog):
@@ -14,7 +14,7 @@ class DialogLoading(Gtk.Dialog):
         self.access = access
 
         builder = Gtk.Builder()
-        builder.add_from_file("gtk3/glade/dialog_loading.glade")
+        builder.add_from_file("komunitin_lite/gtk3/glade/dialog_loading.glade")
         self.main_box = builder.get_object("MainBox")
         self.label_error = builder.get_object("LabelError")
         self.label_error.set_text(_("Loading data") + "...")

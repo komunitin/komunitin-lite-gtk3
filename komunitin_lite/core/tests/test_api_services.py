@@ -4,8 +4,8 @@ import configparser
 import json
 import os
 
-from core.api_services import (get_user_accounts, get_account_balance,
-                               get_account_transfers)
+from komunitin_lite.core.api_services import (
+    get_user_accounts, get_account_balance, get_account_transfers)
 from core.tests.fake_objects import CONFIG_SERVER, FakeApiAccess
 
 

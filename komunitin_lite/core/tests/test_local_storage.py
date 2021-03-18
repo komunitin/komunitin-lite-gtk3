@@ -2,9 +2,9 @@ import unittest
 from unittest.mock import patch, mock_open
 import json
 
-from core.local_storage import (_encode, _decode, KOMUNITIN_DATA_FILE,
-                                KOMUNITIN_CONFIG_FILE, get_local_data,
-                                put_local_data)
+from komunitin_lite.core.local_storage import (
+    _encode, _decode, KOMUNITIN_DATA_FILE, KOMUNITIN_CONFIG_FILE,
+    get_local_data, put_local_data)
 
 
 class TestLocalStorage(unittest.TestCase):

@@ -1,8 +1,8 @@
 import sys
 import getpass
 
-from core.oauth2 import ApiAccess
-from core.account import get_user_accounts
+from komunitin_lite.core.oauth2 import ApiAccess
+from komunitin_lite.core.account import get_user_accounts
 
 
 class CommandLineInterface:

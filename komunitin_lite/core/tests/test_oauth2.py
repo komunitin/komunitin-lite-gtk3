@@ -5,8 +5,8 @@ import time
 import json
 import os
 
-from core.oauth2 import ApiAccess
-from core.tests.fake_objects import CONFIG_SERVER
+from komunitin_lite.core.oauth2 import ApiAccess
+from komunitin_lite.core.tests.fake_objects import CONFIG_SERVER
 
 
 class TestOauth2(unittest.TestCase):

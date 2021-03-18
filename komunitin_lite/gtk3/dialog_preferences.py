@@ -5,7 +5,7 @@ from glob import glob
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, Gdk
 
-from core.local_storage import get_local_data, put_local_data
+from komunitin_lite.core.local_storage import get_local_data, put_local_data
 
 
 class DialogPreferences(Gtk.Dialog):
@@ -15,7 +15,8 @@ class DialogPreferences(Gtk.Dialog):
         self.set_default_size(300, 200)
 
         builder = Gtk.Builder()
-        builder.add_from_file("gtk3/glade/dialog_preferences.glade")
+        builder.add_from_file(
+            "komunitin_lite/gtk3/glade/dialog_preferences.glade")
         self.main_box = builder.get_object("MainBox")
         self.label_langs = builder.get_object("LabelLangs")
         self.label_langs.set_text(_("Select language") + ":")

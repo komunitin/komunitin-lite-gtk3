@@ -40,10 +40,11 @@ setup(
     package_dir={'komunitin_lite': 'komunitin_lite'},
     package_data={
         'komunitin_lite': [
-            'komunitin_lite/config*.ini',
-            'komunitin_lite/po/*/LC_MESSAGES/base.mo',
+            'config*.ini',
+            'po/*/LC_MESSAGES/base.mo',
         ],
     },
+    include_package_data=True,
     python_requires='>=3.7, <4',
     install_requires=['requests'],
     scripts=['komunitin_lite/komunitin_lite'],

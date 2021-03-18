@@ -31,10 +31,22 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
     keywords='komunitin, social currencies, mutual credit',
-    package_dir={'': 'komunitin_lite'},
-    packages=find_packages(where='komunitin_lite'),
+    packages=[
+        'komunitin_lite',
+        'komunitin_lite.core',
+        'komunitin_lite.gtk3',
+        'komunitin_lite.cli',
+    ],
+    package_dir={'komunitin_lite': 'komunitin_lite'},
+    package_data={
+        'komunitin_lite': [
+            'komunitin_lite/config*.ini',
+            'komunitin_lite/po/*/LC_MESSAGES/base.mo',
+        ],
+    },
     python_requires='>=3.7, <4',
     install_requires=['requests'],
+    scripts=['komunitin_lite/komunitin_lite'],
     project_urls={
         'Bug Reports': 'https://github.com/XaviP/komunitin-lite-gtk3/issues',
         'Source': 'https://github.com/XaviP/komunitin-lite-gtk3',

@@ -6,7 +6,7 @@ import json
 import os
 
 from komunitin_lite.core.oauth2 import ApiAccess
-from komunitin_lite.core.tests.fake_objects import CONFIG_SERVER
+from tests.fake_objects import CONFIG_SERVER
 
 
 class TestOauth2(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestOauth2(unittest.TestCase):
         }
         self.local_data["auth"]["created"] = int(time.time())
 
-    @patch('core.oauth2.get_local_data')
+    @patch('komunitin_lite.core.oauth2.get_local_data')
     def test_init_no_data(self, mock_get_data):
         mock_get_data.return_value = {}
         access = ApiAccess(self.test_config)
@@ -31,9 +31,9 @@ class TestOauth2(unittest.TestCase):
         self.assertTrue(access._auth == {})
         self.assertTrue(access.has_access is False)
 
-    @patch('core.oauth2.requests.post')
-    @patch('core.oauth2.put_local_data')
-    @patch('core.oauth2.get_local_data')
+    @patch('komunitin_lite.core.oauth2.requests.post')
+    @patch('komunitin_lite.core.oauth2.put_local_data')
+    @patch('komunitin_lite.core.oauth2.get_local_data')
     def test_init_with_data(self, mock_get_data, mock_put_data, mock_post):
         # token expired
         self.local_data["auth"]["created"] = 0
@@ -59,9 +59,9 @@ class TestOauth2(unittest.TestCase):
                         self.server_oauth2_response["access_token"])
         self.assertTrue(access2.has_access is True)
 
-    @patch('core.oauth2.requests.post')
-    @patch('core.oauth2.put_local_data')
-    @patch('core.oauth2.get_local_data')
+    @patch('komunitin_lite.core.oauth2.requests.post')
+    @patch('komunitin_lite.core.oauth2.put_local_data')
+    @patch('komunitin_lite.core.oauth2.get_local_data')
     def test_new_access(self, mock_get_data, mock_put_data, mock_post):
         # No data
         mock_get_data.return_value = {}

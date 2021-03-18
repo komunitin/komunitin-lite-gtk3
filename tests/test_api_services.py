@@ -6,7 +6,7 @@ import os
 
 from komunitin_lite.core.api_services import (
     get_user_accounts, get_account_balance, get_account_transfers)
-from core.tests.fake_objects import CONFIG_SERVER, FakeApiAccess
+from tests.fake_objects import CONFIG_SERVER, FakeApiAccess
 
 
 class TestApiServices(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestApiServices(unittest.TestCase):
         with open(os.path.join(di, 'json/transfers_response.json'), 'r') as f:
             self.transfers_response = json.load(f)
 
-    @patch('core.api_services.requests.get')
+    @patch('komunitin_lite.core.api_services.requests.get')
     def test_user_accounts(self, mock_get):
         response_mock = Mock()
         response_mock.status_code = 200

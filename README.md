@@ -15,9 +15,9 @@ You can choose your configuration (server) by copying the config_default.ini fil
 and edit the `config.ini` file.
 
 
-To run `python3 komunitin_lite`
+To run `python3 run_komunitin_lite`
 
-(or `python3 komunitin_lite --cli` for command line interface)
+(or `python3 run_komunitin_lite --cli` for command line interface)
 
 
 To run tests: `python3 -m unittest`

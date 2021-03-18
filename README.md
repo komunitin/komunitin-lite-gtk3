@@ -10,20 +10,20 @@ All dependencies are already installed by default in most current GNU/Linux dist
 
 You can choose your configuration (server) by copying the config_default.ini file: 
 
-    `cp config_default.ini config.ini`
+    `cp komunitin_lite/config_default.ini komunitin_lite/config.ini`
 
-and edit the `config.ini` file.
+and edit the `komunitin_lite/config.ini` file.
 
 
-To run `python3 run_komunitin_lite`
+To run `./run_komunitin_lite`
 
-(or `python3 run_komunitin_lite --cli` for command line interface)
+(or `./run_komunitin_lite --cli` for command line interface)
 
 
 To run tests: `python3 -m unittest`
 
 
-You can develop another UI with the core. See [core/README.md](https://github.com/XaviP/komunitin-lite-gtk3/blob/master/core/README.md).
+You can develop another UI with the core. See [core/README.md](https://github.com/XaviP/komunitin-lite-gtk3/blob/master/komunitin_lite/core/README.md).
 
 
 #### TODO

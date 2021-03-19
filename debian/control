@@ -4,10 +4,10 @@ Section: utils
 Priority: optional
 Standards-Version: 0.0-1
 Build-Depends: debhelper (>= 9), python3
-X-Python-Version: >= 3.7
+X-Python3-Version: >= 3.7
 
 Package: komunitin-lite
 Architecture: all
-Depends: python3-gi, python3-requests
+Depends: python3 (>= 3.7), python3-gi, python3-requests
 Description: Basic python GTK3 client for komunitin users.
  komunitin.org client in python3 gtk3

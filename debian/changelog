@@ -1,5 +1,6 @@
-komunitin-lite (0.0.1) urgency=medium 
+komunitin-lite (0.0.1) focal; urgency=medium
 
- * Add the new features here. 
+  * Initial version 
 
--- XaviP <xavip@medusaweb.cat>  Sat, 17 Mar 2021 12:00:00 +0200
+ -- Xavier Paniello <xavip@medusaweb.cat>  Fri, 19 Mar 2021 06:58:42 +0100
+

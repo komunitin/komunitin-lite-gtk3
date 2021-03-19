@@ -4,7 +4,7 @@ https://packaging.python.org/guides/distributing-packages-using-setuptools/
 https://github.com/pypa/sampleproject
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup
 import pathlib
 
 here = pathlib.Path(__file__).parent.resolve()
@@ -45,6 +45,11 @@ setup(
         ],
     },
     include_package_data=True,
+    data_files=[
+        ('share/applications', ['komunitin_lite.desktop']),
+        ('share/pixmaps', ['komunitin_icon.svg']),
+        # ('share/man/man1', ['man/hello.1']),
+    ],
     python_requires='>=3.7, <4',
     install_requires=['requests'],
     scripts=['komunitin_lite/komunitin_lite'],

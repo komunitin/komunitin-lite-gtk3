@@ -4,6 +4,6 @@ Comment=Basic python GTK3 client for komunitin user.
 Exec=komunitin_lite 
 Terminal=false 
 Type=Application 
-Icon=system 
+Icon=komunitin_icon.svg 
 Categories=GNOME;GTK;Utility; 
 StartupNotify=false 

@@ -2,16 +2,19 @@
 
 import os
 import sys
+import inspect
 import configparser
 import gettext
 
+from komunitin_lite import get_base_path
 from komunitin_lite.core.local_storage import get_local_data
 
+BASE_PATH = os.path.dirname(inspect.getfile(get_base_path))
 
 if __name__ == "__main__":
-    config_file = "komunitin_lite/config.ini"
+    config_file = os.path.join(BASE_PATH, "config.ini")
     if not os.path.isfile(config_file):
-        config_file = "komunitin_lite/config_default.ini"
+        config_file = os.path.join(BASE_PATH, "config_default.ini")
     config = configparser.ConfigParser()
     try:
         config.read(config_file)
@@ -28,8 +31,8 @@ if __name__ == "__main__":
         sys.exit()
 
     lang = local_config.get('language', 'en')
-    language = gettext.translation('base', localedir='komunitin_lite/po',
-                                   languages=[lang])
+    language = gettext.translation(
+        'base', localedir=os.path.join(BASE_PATH, 'po'), languages=[lang])
     language.install()
 
     if "--cli" in sys.argv:

@@ -2,12 +2,12 @@ Source: komunitin-lite
 Maintainer: XaviP <xavip@medusaweb.cat>
 Section: utils
 Priority: optional
-Standards-Version: 0.0-1
+Standards-Version: 4.5.0
 Build-Depends: debhelper (>= 9), python3
 X-Python3-Version: >= 3.7
 
 Package: komunitin-lite
 Architecture: all
-Depends: python3 (>= 3.7), python3-gi, python3-requests
+Depends: python3 (>= 3.7), python3-gi, python3-requests, ${misc:Depends}
 Description: Basic python GTK3 client for komunitin users.
  komunitin.org client in python3 gtk3

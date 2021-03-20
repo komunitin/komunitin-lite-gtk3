@@ -41,5 +41,6 @@ if __name__ == "__main__":
         cli.run()
     else:
         from komunitin_lite.gtk3.application import Application
-        app = Application(config=config)
+        glade_path = os.path.join(BASE_PATH, "gtk3", "glade")
+        app = Application(config=config, glade_path=glade_path)
         app.run(sys.argv)

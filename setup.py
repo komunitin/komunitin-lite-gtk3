@@ -43,6 +43,9 @@ setup(
             'config*.ini',
             'po/*/LC_MESSAGES/base.mo',
         ],
+        'komunitin_lite.gtk3': [
+            'glade/*.glade',
+        ],
     },
     include_package_data=True,
     data_files=[

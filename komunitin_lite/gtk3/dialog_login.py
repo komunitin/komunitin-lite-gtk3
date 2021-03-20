@@ -1,5 +1,6 @@
 import threading
 import gi
+import os
 
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, Gdk, GLib
@@ -15,7 +16,8 @@ class DialogLogin(Gtk.Dialog):
         self.user = access.user
 
         builder = Gtk.Builder()
-        builder.add_from_file("komunitin_lite/gtk3/glade/dialog_login.glade")
+        builder.add_from_file(
+            os.path.join(self.parent.glade_path, "dialog_login.glade"))
         self.main_box = builder.get_object("MainBox")
         self.error_label = builder.get_object("ErrorLabel")
 

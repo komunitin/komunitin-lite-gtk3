@@ -11,9 +11,10 @@ from komunitin_lite.gtk3.dialog_transfer import DialogTransfer
 
 class AppWindow(Gtk.ApplicationWindow):
 
-    def __init__(self, *args, access, **kwargs):
+    def __init__(self, *args, glade_path, access, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_default_size(600, 400)
+        self.glade_path = glade_path
         self.set_icon_from_file("komunitin_icon.svg")
         self.access = access
         self.accounts = []
@@ -138,8 +139,9 @@ class AppWindow(Gtk.ApplicationWindow):
         dialog.destroy()
 
     def show_dialog_transfer(self):
-        self.dialog_login = DialogTransfer(self, self.access)
-        self.dialog_login.set_modal(True)
+        if self.account:
+            self.dialog_login = DialogTransfer(self, self.access)
+            self.dialog_login.set_modal(True)
 
     def on_account_combo_changed(self, combo):
         account = None

@@ -1,4 +1,5 @@
 import threading
+import os
 import re
 import gi
 
@@ -17,7 +18,7 @@ class DialogTransfer(Gtk.Dialog):
 
         builder = Gtk.Builder()
         builder.add_from_file(
-            "komunitin_lite/gtk3/glade/dialog_transfer.glade")
+            os.path.join(self.parent.glade_path, "dialog_transfer.glade"))
         self.main_box = builder.get_object("MainBox")
 
         self.error_label = builder.get_object("ErrorLabel")

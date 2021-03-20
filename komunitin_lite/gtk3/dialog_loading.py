@@ -1,3 +1,4 @@
+import os
 import threading
 import gi
 
@@ -14,7 +15,8 @@ class DialogLoading(Gtk.Dialog):
         self.access = access
 
         builder = Gtk.Builder()
-        builder.add_from_file("komunitin_lite/gtk3/glade/dialog_loading.glade")
+        builder.add_from_file(
+            os.path.join(self.parent.glade_path, "dialog_loading.glade"))
         self.main_box = builder.get_object("MainBox")
         self.label_error = builder.get_object("LabelError")
         self.label_error.set_text(_("Loading data") + "...")

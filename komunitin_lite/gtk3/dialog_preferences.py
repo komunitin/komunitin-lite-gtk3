@@ -16,7 +16,7 @@ class DialogPreferences(Gtk.Dialog):
 
         builder = Gtk.Builder()
         builder.add_from_file(
-            "komunitin_lite/gtk3/glade/dialog_preferences.glade")
+            os.path.join(self.parent.glade_path,"dialog_preferences.glade"))
         self.main_box = builder.get_object("MainBox")
         self.label_langs = builder.get_object("LabelLangs")
         self.label_langs.set_text(_("Select language") + ":")

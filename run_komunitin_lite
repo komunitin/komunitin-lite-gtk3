@@ -9,9 +9,9 @@ import gettext
 from komunitin_lite import get_base_path
 from komunitin_lite.core.local_storage import get_local_data
 
-BASE_PATH = os.path.dirname(inspect.getfile(get_base_path))
 
 if __name__ == "__main__":
+    BASE_PATH = os.path.dirname(inspect.getfile(get_base_path))
     config_file = os.path.join(BASE_PATH, "config.ini")
     if not os.path.isfile(config_file):
         config_file = os.path.join(BASE_PATH, "config_default.ini")
@@ -41,6 +41,5 @@ if __name__ == "__main__":
         cli.run()
     else:
         from komunitin_lite.gtk3.application import Application
-        glade_path = os.path.join(BASE_PATH, "gtk3", "glade")
-        app = Application(config=config, glade_path=glade_path)
+        app = Application(config=config, base_path=BASE_PATH)
         app.run(sys.argv)

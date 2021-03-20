@@ -40,6 +40,7 @@ setup(
     package_dir={'komunitin_lite': 'komunitin_lite'},
     package_data={
         'komunitin_lite': [
+            'komunitin_icon.svg',
             'config*.ini',
             'po/*/LC_MESSAGES/base.mo',
         ],
@@ -50,7 +51,7 @@ setup(
     include_package_data=True,
     data_files=[
         ('share/applications', ['komunitin_lite.desktop']),
-        ('share/pixmaps', ['komunitin_icon.svg']),
+        ('share/pixmaps', ['komunitin_lite/komunitin_icon.svg']),
         # ('share/man/man1', ['man/hello.1']),
     ],
     python_requires='>=3.7, <4',

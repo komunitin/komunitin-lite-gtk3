@@ -1,3 +1,4 @@
+import os
 import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gtk
@@ -11,11 +12,13 @@ from komunitin_lite.gtk3.dialog_transfer import DialogTransfer
 
 class AppWindow(Gtk.ApplicationWindow):
 
-    def __init__(self, *args, glade_path, access, **kwargs):
+    def __init__(self, *args, base_path, access, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_default_size(600, 400)
-        self.glade_path = glade_path
-        # self.set_icon_from_file("komunitin_icon.svg")
+        self.base_path = base_path
+        self.glade_path = os.path.join(base_path, "gtk3", "glade")
+        self.set_icon_from_file(
+            os.path.join(base_path, "komunitin_icon.svg"))
         self.access = access
         self.accounts = []
         self.account = None

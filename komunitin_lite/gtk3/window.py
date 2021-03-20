@@ -15,7 +15,7 @@ class AppWindow(Gtk.ApplicationWindow):
         super().__init__(*args, **kwargs)
         self.set_default_size(600, 400)
         self.glade_path = glade_path
-        self.set_icon_from_file("komunitin_icon.svg")
+        # self.set_icon_from_file("komunitin_icon.svg")
         self.access = access
         self.accounts = []
         self.account = None

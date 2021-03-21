@@ -7,7 +7,7 @@ from komunitin_lite.core.oauth2 import KomunitinNetError
 def get_user_accounts(access):
     me_url = (access.server["base_api_url"] +
               "/social/users/me?include=members")
-    resp = requests.get(me_url, headers=access.headers)
+    resp = requests.get(me_url, headers=access.headers, timeout=5)
     if resp.status_code == 200:
         r = resp.json()
         data = {
@@ -47,7 +47,7 @@ def get_user_accounts(access):
 
 def get_account_balance(access, acc_link):
     acc_url = "{}?{}".format(acc_link, "include=currency")
-    resp = requests.get(acc_url, headers=access.headers)
+    resp = requests.get(acc_url, headers=access.headers, timeout=5)
     if resp.status_code == 200:
         r = resp.json()
         data = {
@@ -70,7 +70,7 @@ def get_account_transfers(access, group_code, account_id):
     trans_url = (access.server["base_api_url"] + "/accounting/{}/transfers" +
                  "?filter[account]={}")
     resp = requests.get(trans_url.format(group_code, account_id),
-                        headers=access.headers)
+                        headers=access.headers, timeout=5)
     if resp.status_code == 200:
         r = resp.json()
         data = []
@@ -107,7 +107,7 @@ def get_account_transfers(access, group_code, account_id):
 def get_unknown_accounts(access, group_code, account_ids):
     accounts_url = "{}/social/{}/members?filter[account]={}".format(
         access.server["base_api_url"], group_code, ','.join(account_ids))
-    resp = requests.get(accounts_url, headers=access.headers)
+    resp = requests.get(accounts_url, headers=access.headers, timeout=5)
     if resp.status_code == 200:
         return resp.json()
     else:
@@ -148,7 +148,8 @@ def post_transfer(access, data):
             }
         }
     }
-    resp = requests.post(transfer_url, body=body, headers=access.headers)
+    resp = requests.post(transfer_url, body=body, headers=access.headers,
+                         timeout=5)
     if resp.status_code == 200:
         return resp.json()
     else:

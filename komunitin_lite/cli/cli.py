@@ -2,7 +2,7 @@ import sys
 import getpass
 
 from komunitin_lite.core.oauth2 import ApiAccess
-from komunitin_lite.core.account import get_user_accounts
+from komunitin_lite.core.account import get_accounts
 
 
 class CommandLineInterface:
@@ -42,7 +42,7 @@ class CommandLineInterface:
 
     def _get_accounts(self):
         try:
-            self.accounts = get_user_accounts(self.access)
+            self.accounts = get_accounts(self.access)
         except Exception as e:
             print(str(e))
             sys.exit()

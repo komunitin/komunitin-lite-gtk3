@@ -29,7 +29,7 @@ class Transfer:
             "decimals": ""
         }
 
-    def check_data(self, access):
+    def check_data(self, access, network_code):
         """Method to check if payer account exists and to get account id
 
         Parameters:
@@ -37,11 +37,19 @@ class Transfer:
         Returns:
         boolean, str: True if exists, str with error if not
         """
-        account_data = check_account(access, self.payer_account["code"])
-        # TODO assign payer account id, check currency, etc...
+        try:
+            account_data = check_account(access, network_code,
+                                         self.payer_account["code"])
+        except Exception as e:
+            return False, str(e)
+
+        if account_data["currency_id"] != self.currency["id"]:
+            return False, _("Cannot make a transfer in different currencies")
+
+        self.payer_account["id"] = account_data["id"]
         return True, None
 
-    def make_transfer(self, access):
+    def send_transfer(self, access):
         """Method to send completed transfer
 
         Parameters:
@@ -49,8 +57,18 @@ class Transfer:
         Returns:
         boolean, str: True if done, str with error if not
         """
-        # TODO prepare data
-        data = {}
-        resp = post_transfer(access, data)
+        data = {
+            "transaction_id": self.id,
+            "currency_id": self.currency["id"],
+            "amount": self.amount * (10 ** int(self.currency["decimals"])),
+            "meta": self.meta,
+            "from_account_id": self.payer_account["id"],
+            "to_account_id": self.payee_account["id"],
+        }
+        try:
+            resp = post_transfer(access, data)
+        except Exception as e:
+            return False, str(e)
+
         # TODO assign missing data: created, state, etc...
         return True, ""

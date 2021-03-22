@@ -127,15 +127,27 @@ def get_unknown_accounts(access, group_code, account_ids):
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
-def check_account(access, account):
-    # It has to return the account info (account id, member name, etc...)
-    pass
+def check_account(access, network_code, account_code):
+    account_url = "{}/accounting/{}/accounts/{}".format(
+        access.server["base_api_url"], network_code, account_code)
+    resp = requests.get(account_url, headers=access.headers, timeout=5)
+    if resp.status_code == 200:
+        data = resp.json()["data"]
+        return {
+            "id": data["id"],
+            "code": data["attributes"]["code"],
+            "currency_id": data["relationships"]["currency"]["data"]["id"],
+        }
+
+    else:
+        print("Error %s: %s" % (resp.status_code, resp.text))
+        raise KomunitinNetError(resp.text, resp.status_code)
 
 
 def post_transfer(access, data):
     transfer_url = "{}/accounting/{}/transfers".format(
-        access.server["api_base_url"], data["currency"])
-    body = {
+        access.server["base_api_url"], data["currency_id"])
+    params = {
         "data": {
             "id": data["transaction_id"],
             "type": "transfers",
@@ -160,7 +172,7 @@ def post_transfer(access, data):
             }
         }
     }
-    resp = requests.post(transfer_url, body=body, headers=access.headers,
+    resp = requests.post(transfer_url, params, headers=access.headers,
                          timeout=5)
     if resp.status_code == 200:
         return resp.json()

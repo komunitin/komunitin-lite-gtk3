@@ -83,7 +83,8 @@ class DialogTransfer(Gtk.Dialog):
             thread.start()
 
     def check_transfer(self, transfer):
-        ok, error = transfer.check_data(self.parent.access)
+        ok, error = transfer.check_data(self.parent.access,
+                                        self.parent.account.group["code"])
         if not ok:
             GLib.idle_add(self.check_wrong, error)
         else:
@@ -99,13 +100,12 @@ class DialogTransfer(Gtk.Dialog):
     def check_ok(self, transfer):
         self.error_label.set_text(_("Data is ok. Sending transfer") + "...")
         thread = threading.Thread(
-            target=self.send_transaction, args=(transfer,))
+            target=self.send_transfer, args=(transfer,))
         thread.daemon = True
         thread.start()
 
     def send_transfer(self, transfer):
-        # TODO: Send real transaction
-        ok, error = transfer.make_transfer(self.parent.access)
+        ok, error = transfer.send_transfer(self.parent.access)
         if not ok:
             GLib.idle_add(self.send_wrong, error)
         else:

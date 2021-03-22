@@ -109,7 +109,19 @@ def get_unknown_accounts(access, group_code, account_ids):
         access.server["base_api_url"], group_code, ','.join(account_ids))
     resp = requests.get(accounts_url, headers=access.headers, timeout=5)
     if resp.status_code == 200:
-        return resp.json()
+        members = resp.json()
+        accounts_info = []
+        for a_id in account_ids:
+            for memb in members["data"]:
+                if memb["relationships"]["account"]["data"]["id"] == a_id:
+                    accounts_info.append({
+                        "id": a_id,
+                        "code": memb["attributes"]["code"],
+                        "name": memb["attributes"]["name"],
+                    })
+
+        return accounts_info
+
     else:
         print("Error %s: %s" % (resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)

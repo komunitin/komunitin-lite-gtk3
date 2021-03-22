@@ -1,7 +1,8 @@
 import uuid
 
 from komunitin_lite.core.api_services import (
-    get_user_accounts, get_account_balance, get_account_transfers)
+    get_user_accounts, get_account_balance, get_account_transfers,
+    get_unknown_accounts)
 from komunitin_lite.core.transfer import Transfer
 
 
@@ -88,9 +89,18 @@ class Account:
 
             transfers.append(t)
 
-        # TODO: get unknown accounts
-        # resp2 = get_unknown_accounts(access, self.group_code,
-        #                              unknown_accounts)
+        accounts_info = get_unknown_accounts(access, self.group["code"],
+                                             unknown_accounts)
+        # TODO: optimize this if possible
+        for i in range(0, len(transfers)):
+            for a_info in accounts_info:
+                if transfers[i].payer_account["id"] == a_info["id"]:
+                    transfers[i].payer_account["code"] = a_info["code"]
+                    break
+                elif transfers[i].payee_account["id"] == a_info["id"]:
+                    transfers[i].payee_account["code"] = a_info["code"]
+                    break
+
         return transfers
 
     def create_new_transfer(self, from_account, amount, meta):

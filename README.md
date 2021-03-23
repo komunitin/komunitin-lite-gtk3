@@ -8,11 +8,7 @@ All dependencies are already installed by default in most current GNU/Linux dist
 - python >= 3.7 (with requests, threading, etc...)
 - PyGObject >= 3.36.0
 
-You can choose your configuration (server) by copying the config_default.ini file: 
-
-    `cp komunitin_lite/config_default.ini komunitin_lite/config.ini`
-
-and edit the `komunitin_lite/config.ini` file.
+(if not try: `sudo apt install python3 python3-gi python3-requests`)
 
 
 ### Installation
@@ -22,6 +18,12 @@ To run:
     git clone https://github.com/XaviP/komunitin-lite-gtk3.git
     cd komunitin-lite-gtk3
     ./run_komunitin_lite
+
+You can choose your configuration (server) by copying the config_default.ini file: 
+
+    `cp komunitin_lite/config_default.ini komunitin_lite/config.ini`
+
+and edit the `komunitin_lite/config.ini` file.
 
 To install:
 
@@ -45,5 +47,6 @@ You can develop another UI with the core. See [core/README.md](https://github.co
 - Finish and test make transactions
 - Update translations
 - More tests
+- deb package
 - ... 
 

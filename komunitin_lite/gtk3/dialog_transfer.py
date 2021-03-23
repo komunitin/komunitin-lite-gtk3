@@ -105,7 +105,8 @@ class DialogTransfer(Gtk.Dialog):
         thread.start()
 
     def send_transfer(self, transfer):
-        ok, error = transfer.send_transfer(self.parent.access)
+        ok, error = transfer.send_transfer(self.parent.access,
+                                           self.parent.account.group["code"])
         if not ok:
             GLib.idle_add(self.send_wrong, error)
         else:

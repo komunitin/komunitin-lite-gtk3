@@ -29,7 +29,7 @@ class Transfer:
             "decimals": ""
         }
 
-    def check_data(self, access, network_code):
+    def check_data(self, access, group_code):
         """Method to check if payer account exists and to get account id
 
         Parameters:
@@ -38,7 +38,7 @@ class Transfer:
         boolean, str: True if exists, str with error if not
         """
         try:
-            account_data = check_account(access, network_code,
+            account_data = check_account(access, group_code,
                                          self.payer_account["code"])
         except Exception as e:
             return False, str(e)
@@ -49,7 +49,7 @@ class Transfer:
         self.payer_account["id"] = account_data["id"]
         return True, None
 
-    def send_transfer(self, access):
+    def send_transfer(self, access, group_code):
         """Method to send completed transfer
 
         Parameters:
@@ -57,10 +57,11 @@ class Transfer:
         Returns:
         boolean, str: True if done, str with error if not
         """
+        amount = float(self.amount) * (10 ** int(self.currency["decimals"]))
         data = {
             "transaction_id": self.id,
-            "currency_id": self.currency["id"],
-            "amount": self.amount * (10 ** int(self.currency["decimals"])),
+            "group_code": group_code,
+            "amount": int(amount),
             "meta": self.meta,
             "from_account_id": self.payer_account["id"],
             "to_account_id": self.payee_account["id"],

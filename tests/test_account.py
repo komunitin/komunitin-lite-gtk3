@@ -44,9 +44,12 @@ class TestAccount(unittest.TestCase):
         # account.get_transfers
         response_mock.json.return_value = self.transfers_response
         mock_get.return_value = response_mock
-        # transfers = self.account.get_transfers(self.access)
-        # self.assertTrue(transfers[0].id ==
-        #                 'e2f52ef0-6deb-471a-aeb3-ea10a1b187e2')
+        with patch("komunitin_lite.core.account"
+                   ".get_unknown_accounts") as mock_get_unknown:
+            mock_get_unknown.return_value = []
+            transfers = self.account.get_transfers(self.access)
+        self.assertTrue(transfers[0].id ==
+                        'e2f52ef0-6deb-471a-aeb3-ea10a1b187e2')
 
         # account.create_new_transfer
         new_trans = self.account.create_new_transfer("TEST0000", 12, "test")

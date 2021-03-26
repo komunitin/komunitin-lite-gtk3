@@ -98,7 +98,29 @@ class DialogTransfer(Gtk.Dialog):
         self.button_save.set_sensitive(True)
 
     def check_ok(self, transfer):
-        self.error_label.set_text(_("Data is ok. Sending transfer") + "...")
+        dialog = Gtk.MessageDialog(
+            transient_for=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK_CANCEL,
+            text=_("Confirm your transfer"),
+        )
+        sectext = ("{} {} " + _("from account") + " {} " +
+                   _("to account") + " {}")
+        dialog.format_secondary_text(
+            sectext.format(
+                transfer.amount, transfer.currency["name"],
+                transfer.payer_account["code"], transfer.payee_account["code"]
+            )
+        )
+        response = dialog.run()
+        if response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+            self.destroy()
+        elif response == Gtk.ResponseType.OK:
+            self.error_label.set_text(_("Sending transfer") + "...")
+            dialog.destroy()
+
         thread = threading.Thread(
             target=self.send_transfer, args=(transfer,))
         thread.daemon = True

@@ -12,19 +12,22 @@ from komunitin_lite import get_base_path
 from komunitin_lite.core.local_storage import USER_LOCAL_DIR, get_local_data
 
 
-if __name__ == "__main__":
-    BASE_PATH = os.path.dirname(inspect.getfile(get_base_path))
-    config_file = os.path.join(BASE_PATH, "config.ini")
+def get_app_config(base_path):
+    config_file = os.path.join(base_path, "config.ini")
     if not os.path.isfile(config_file):
-        config_file = os.path.join(BASE_PATH, "config_default.ini")
+        config_file = os.path.join(base_path, "config_default.ini")
     config = configparser.ConfigParser()
 
-    # Read app config file
     try:
         config.read(config_file)
     except Exception as e:
         print("Error reading configuration data: {}".format(e))
         sys.exit()
+
+    return config
+
+
+def get_user_local_config():
 
     # Create user local dir if doesn't exist (only first time)
     if not os.path.exists(USER_LOCAL_DIR):
@@ -34,6 +37,27 @@ if __name__ == "__main__":
             print("Error creating user local directory: {}".format(e))
             sys.exit()
 
+    # Read user local config
+    try:
+        local_config = get_local_data(config=True)
+    except Exception as e:
+        print("Error reading user local configuration file: {}".format(e))
+        sys.exit()
+
+    return local_config
+
+
+def get_available_languages(base_path):
+    langs_paths = glob(os.path.join(base_path, 'po', '*', 'LC_MESSAGES',
+                                    'base.mo'))
+    return [pth.split(os.path.sep)[-3] for pth in langs_paths]
+
+
+if __name__ == "__main__":
+    BASE_PATH = os.path.dirname(inspect.getfile(get_base_path))
+    config = get_app_config(BASE_PATH)
+    user_local_config = get_user_local_config()
+
     # Logging to local file
     logging.basicConfig(
         filename=os.path.join(USER_LOCAL_DIR, 'komunitin_lite.log'),
@@ -41,32 +65,22 @@ if __name__ == "__main__":
         format='[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s'
     )
 
-    # Read user local config
-    try:
-        local_config = get_local_data(config=True)
-    except Exception as e:
-        print("Error reading user local configuration file.")
-        print(str(e))
-        sys.exit()
+    # Install language
+    langs_available = get_available_languages(BASE_PATH)
+    lang = user_local_config.get('language', 'en')
+    language = gettext.translation(
+        'base', localedir=os.path.join(BASE_PATH, 'po'), languages=[lang])
+    language.install()
 
-    # Find all available languages
-    langs_paths = glob(os.path.join(BASE_PATH, "po", '*', 'LC_MESSAGES',
-                                    'base.mo'))
-    langs_available = [pth.split(os.path.sep)[-3] for pth in langs_paths]
+    # Insert data in config to be available in the whole app
     config["app_data"] = {
         "languages": ",".join(langs_available),
         "base_path": BASE_PATH
     }
 
-    # Install language
-    lang = local_config.get('language', 'en')
-    language = gettext.translation(
-        'base', localedir=os.path.join(BASE_PATH, 'po'), languages=[lang])
-    language.install()
-
     if "--cli" in sys.argv:
         from komunitin_lite.cli.cli import CommandLineInterface
-        cli = CommandLineInterface(config)
+        cli = CommandLineInterface(config=config)
         cli.run()
     else:
         from komunitin_lite.gtk3.application import Application

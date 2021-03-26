@@ -1,5 +1,6 @@
 import time
 import requests
+import logging
 
 from komunitin_lite.core.local_storage import (
     get_local_data, put_local_data, KomunitinFileError)
@@ -31,7 +32,6 @@ class ApiAccess:
             try:
                 self._refresh_auth_token()
             except Exception:
-                print("Cannot refresh a non-expired token")
                 self._auth = {}
 
     def new_access(self, user, password):
@@ -86,12 +86,16 @@ class ApiAccess:
             self.has_access = True
             self.headers = self._make_headers(self._auth['access_token'])
             put_local_data({"user": self.user, "auth": self._auth})
+            logging.debug("Authentication done")
         elif response.status_code == 401:
             # Authentication fail
             self.has_access = False
+            logging.info("Authentication fail: {} {}"
+                         .format(response.status_code, response.text))
             raise KomunitinAuthError(response.text)
         else:
-            print("Error %s: %s" % (response.status_code, response.text))
+            logging.error("Error sending auth: {} {}"
+                          .format(response.status_code, response.text))
             raise KomunitinNetError(response.text, response.status_code)
 
     def _refresh_auth_token(self):
@@ -110,8 +114,10 @@ class ApiAccess:
             self._auth["created"] = int(time.time())
             self.headers = self._make_headers(self._auth['access_token'])
             put_local_data({"user": self.user, "auth": self._auth})
+            logging.debug("Token refreshed")
         else:
-            print("Error %s: %s" % (response.status_code, response.text))
+            logging.warning("Cannot refresh a non-expired token: {} {}".
+                            format(response.status_code, response.text))
             raise KomunitinNetError(response.text, response.status_code)
 
     def _make_headers(self, token):

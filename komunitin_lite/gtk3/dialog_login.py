@@ -69,7 +69,6 @@ class DialogLogin(Gtk.Dialog):
         if error[0:7] == "Network":
             self.error_label.set_text(
                 _("Network error. Cannot connect."))
-        print(error)
         self.button_login.set_sensitive(True)
 
     def auth_done(self):

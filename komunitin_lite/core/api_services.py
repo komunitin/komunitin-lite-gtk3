@@ -1,4 +1,5 @@
 import requests
+import logging
 from datetime import datetime
 
 from komunitin_lite.core.oauth2 import KomunitinNetError
@@ -38,10 +39,12 @@ def get_user_accounts(access):
                             i["relationships"]["group"]["data"]["id"]
                         a["group"]["code"] = \
                             a["account"]["link"].split("/")[-3]
+        logging.debug("Account data recieved: {}".format(data))
         return data
 
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error recieving account data: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
@@ -60,9 +63,11 @@ def get_account_balance(access, acc_link):
                 "decimals": r["included"][0]["attributes"]["decimals"],
             }
         }
+        logging.debug("Balance data recieved: {}".format(data))
         return data
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error recieving balance data: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
@@ -98,9 +103,11 @@ def get_account_transfers(access, group_code, account_id):
                     }
                 }
                 data.append(trans)
+        logging.debug("Transfers data recieved: {}".format(data))
         return data
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error recieving transfers data: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
@@ -119,11 +126,12 @@ def get_unknown_accounts(access, group_code, account_ids):
                         "code": memb["attributes"]["code"],
                         "name": memb["attributes"]["name"],
                     })
-
+        logging.debug("Unknown accounts recieved: {}".format(accounts_info))
         return accounts_info
 
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error recieving unknown accounts data: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
@@ -132,15 +140,18 @@ def check_account(access, group_code, account_code):
         access.server["base_api_url"], group_code, account_code)
     resp = requests.get(account_url, headers=access.headers, timeout=5)
     if resp.status_code == 200:
-        data = resp.json()["data"]
-        return {
-            "id": data["id"],
-            "code": data["attributes"]["code"],
-            "currency_id": data["relationships"]["currency"]["data"]["id"],
+        acc_info = resp.json()["data"]
+        data = {
+            "id": acc_info["id"],
+            "code": acc_info["attributes"]["code"],
+            "currency_id": acc_info["relationships"]["currency"]["data"]["id"],
         }
+        logging.debug("Check account data recieved: {}".format(data))
+        return data
 
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error checking account data: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)
 
 
@@ -175,7 +186,10 @@ def post_transfer(access, data):
     resp = requests.post(transfer_url, params, headers=access.headers,
                          timeout=5)
     if resp.status_code == 200:
-        return resp.json()
+        data = resp.json()
+        logging.debug("Transfer sent succesfully: {}".format(data))
+        return data
     else:
-        print("Error %s: %s" % (resp.status_code, resp.text))
+        logging.error("Error sending transfer: {} {}"
+                      .format(resp.status_code, resp.text))
         raise KomunitinNetError(resp.text, resp.status_code)

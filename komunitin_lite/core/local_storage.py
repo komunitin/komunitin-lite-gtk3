@@ -1,6 +1,7 @@
 import os
 import json
 import base64
+import logging
 
 USER_LOCAL_DIR = os.path.join(os.path.expanduser("~"), '.komunitin_lite')
 KOMUNITIN_DATA_FILE = os.path.join(USER_LOCAL_DIR, 'data')
@@ -13,14 +14,24 @@ class KomunitinFileError(Exception):
 
 def get_local_data(config=False):
     if config:
-        return _read_data(KOMUNITIN_CONFIG_FILE, ofuscated=False)
-    return _read_data(KOMUNITIN_DATA_FILE)
+        data = _read_data(KOMUNITIN_CONFIG_FILE, ofuscated=False)
+        logging.debug('Config data read from user local storage')
+    else:
+        data = _read_data(KOMUNITIN_DATA_FILE)
+        logging.debug('Auth data read from user local storage')
+
+    return data
 
 
 def put_local_data(data, config=False):
     if config:
-        return _write_data(data, KOMUNITIN_CONFIG_FILE, ofuscated=False)
-    return _write_data(data, KOMUNITIN_DATA_FILE)
+        done = _write_data(data, KOMUNITIN_CONFIG_FILE, ofuscated=False)
+        logging.debug('Config data written to user local storage')
+    else:
+        done = _write_data(data, KOMUNITIN_DATA_FILE)
+        logging.debug('Auth data written to user local storage')
+
+    return done
 
 
 def _encode(key, clear):
@@ -52,15 +63,13 @@ def _read_data(local_file, ofuscated=True):
                 data = _decode("ofuscated", data)
             komunitin_data = json.loads(data)
         except Exception as e:
-            print("Something wrong reading local data: %s" % e)
+            logging.error("Something wrong reading local data: {}".format(e))
             raise KomunitinFileError(e)
 
     return komunitin_data
 
 
 def _write_data(komunitin_data, local_file, ofuscated=True):
-
-
     try:
         data = json.dumps(komunitin_data)
         if ofuscated:
@@ -68,7 +77,7 @@ def _write_data(komunitin_data, local_file, ofuscated=True):
         with open(local_file, "w") as f:
             f.write(data)
     except Exception as e:
-        print("Something wrong writing local data: %s" % e)
+        logging.error("Something wrong writting local data: {}".format(e))
         raise KomunitinFileError(e)
 
     return True

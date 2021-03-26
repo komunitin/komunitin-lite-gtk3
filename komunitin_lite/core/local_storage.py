@@ -2,10 +2,9 @@ import os
 import json
 import base64
 
-KOMUNITIN_DATA_FILE = os.path.join(os.path.expanduser("~"),
-                                   '.komunitin_lite/data')
-KOMUNITIN_CONFIG_FILE = os.path.join(os.path.expanduser("~"),
-                                     '.komunitin_lite/config')
+USER_LOCAL_DIR = os.path.join(os.path.expanduser("~"), '.komunitin_lite')
+KOMUNITIN_DATA_FILE = os.path.join(USER_LOCAL_DIR, 'data')
+KOMUNITIN_CONFIG_FILE = os.path.join(USER_LOCAL_DIR, 'config')
 
 
 class KomunitinFileError(Exception):
@@ -61,13 +60,6 @@ def _read_data(local_file, ofuscated=True):
 
 def _write_data(komunitin_data, local_file, ofuscated=True):
 
-    # Only first time
-    if not os.path.exists(os.path.dirname(local_file)):
-        try:
-            os.makedirs(os.path.dirname(local_file))
-        except Exception as e:
-            print("Something wrong creating local data directory: %s" % e)
-            raise KomunitinFileError(e)
 
     try:
         data = json.dumps(komunitin_data)

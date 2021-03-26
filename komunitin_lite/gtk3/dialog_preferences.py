@@ -1,6 +1,5 @@
 import os
 import gi
-from glob import glob
 
 gi.require_version("Gtk", "3.0")  # noqa: E402
 from gi.repository import Gtk, Gdk
@@ -16,7 +15,7 @@ class DialogPreferences(Gtk.Dialog):
 
         builder = Gtk.Builder()
         builder.add_from_file(
-            os.path.join(self.parent.glade_path,"dialog_preferences.glade"))
+            os.path.join(self.parent.glade_path, "dialog_preferences.glade"))
         self.main_box = builder.get_object("MainBox")
         self.label_langs = builder.get_object("LabelLangs")
         self.label_langs.set_text(_("Select language") + ":")
@@ -26,8 +25,8 @@ class DialogPreferences(Gtk.Dialog):
         self.button_save = builder.get_object("ButtonSave")
         self.button_save.connect("clicked", self.button_save_clicked)
 
-        paths = glob(os.path.join("po", '*', 'LC_MESSAGES', 'base.mo'))
-        langs_available = [pth.split(os.path.sep)[-3] for pth in paths]
+        langs_available = (self.parent.config["app_data"]["languages"]
+                           .split(","))
         local_config = {}
         try:
             local_config = get_local_data(config=True)

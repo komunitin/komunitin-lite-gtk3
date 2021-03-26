@@ -4,10 +4,12 @@ import os
 import sys
 import inspect
 import configparser
+import logging
 import gettext
+from glob import glob
 
 from komunitin_lite import get_base_path
-from komunitin_lite.core.local_storage import get_local_data
+from komunitin_lite.core.local_storage import USER_LOCAL_DIR, get_local_data
 
 
 if __name__ == "__main__":
@@ -16,20 +18,47 @@ if __name__ == "__main__":
     if not os.path.isfile(config_file):
         config_file = os.path.join(BASE_PATH, "config_default.ini")
     config = configparser.ConfigParser()
+
+    # Read app config file
     try:
         config.read(config_file)
     except Exception as e:
-        print("Error reading configuration data.")
-        print(str(e))
+        print("Error reading configuration data: {}".format(e))
         sys.exit()
 
+    # Create user local dir if doesn't exist (only first time)
+    if not os.path.exists(USER_LOCAL_DIR):
+        try:
+            os.makedirs(USER_LOCAL_DIR)
+        except Exception as e:
+            print("Error creating user local directory: {}".format(e))
+            sys.exit()
+
+    # Logging to local file
+    logging.basicConfig(
+        filename=os.path.join(USER_LOCAL_DIR, 'komunitin_lite.log'),
+        level=getattr(logging, config["logger"].get("logging_level", "ERROR")),
+        format='[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s'
+    )
+
+    # Read user local config
     try:
         local_config = get_local_data(config=True)
     except Exception as e:
-        print("Error reading configuration file.")
+        print("Error reading user local configuration file.")
         print(str(e))
         sys.exit()
 
+    # Find all available languages
+    langs_paths = glob(os.path.join(BASE_PATH, "po", '*', 'LC_MESSAGES',
+                                    'base.mo'))
+    langs_available = [pth.split(os.path.sep)[-3] for pth in langs_paths]
+    config["app_data"] = {
+        "languages": ",".join(langs_available),
+        "base_path": BASE_PATH
+    }
+
+    # Install language
     lang = local_config.get('language', 'en')
     language = gettext.translation(
         'base', localedir=os.path.join(BASE_PATH, 'po'), languages=[lang])
@@ -41,5 +70,5 @@ if __name__ == "__main__":
         cli.run()
     else:
         from komunitin_lite.gtk3.application import Application
-        app = Application(config=config, base_path=BASE_PATH)
+        app = Application(config=config)
         app.run(sys.argv)

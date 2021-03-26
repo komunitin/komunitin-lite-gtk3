@@ -12,13 +12,14 @@ from komunitin_lite.gtk3.dialog_transfer import DialogTransfer
 
 class AppWindow(Gtk.ApplicationWindow):
 
-    def __init__(self, *args, base_path, access, **kwargs):
+    def __init__(self, *args, access, config, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_default_size(600, 400)
-        self.base_path = base_path
-        self.glade_path = os.path.join(base_path, "gtk3", "glade")
+        self.config = config
+        self.base_path = config["app_data"]["base_path"]
+        self.glade_path = os.path.join(self.base_path, "gtk3", "glade")
         self.set_icon_from_file(
-            os.path.join(base_path, "komunitin_icon.svg"))
+            os.path.join(self.base_path, "komunitin_icon.svg"))
         self.access = access
         self.accounts = []
         self.account = None

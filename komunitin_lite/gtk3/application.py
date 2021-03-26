@@ -9,7 +9,7 @@ from komunitin_lite.core.oauth2 import ApiAccess
 
 
 class Application(Gtk.Application):
-    def __init__(self, *args, config, base_path, **kwargs):
+    def __init__(self, *args, config, **kwargs):
         super().__init__(
             *args,
             application_id="org.komunitin.komunitinlite",
@@ -17,7 +17,6 @@ class Application(Gtk.Application):
             **kwargs
         )
         self.config = config
-        self.base_path = base_path
         self.window = None
         self.access = None
 
@@ -42,7 +41,7 @@ class Application(Gtk.Application):
             self.window = AppWindow(
                 application=self,
                 title=_("Komunitin Lite"),
-                base_path=self.base_path,
+                config=self.config,
                 access=self.access
             )
             self.add_window(self.window)

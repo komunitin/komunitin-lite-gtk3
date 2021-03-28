@@ -6,6 +6,9 @@ from komunitin_lite.core.local_storage import (
     get_local_data, put_local_data, KomunitinFileError)
 
 
+logger = logging.getLogger('KomLite')
+
+
 class KomunitinNetError(Exception):
     def __init__(self, message, status_code=0):
         super().__init__(message)
@@ -90,12 +93,12 @@ class ApiAccess:
         elif response.status_code == 401:
             # Authentication fail
             self.has_access = False
-            logging.info("Authentication fail: {} {}"
-                         .format(response.status_code, response.text))
+            logger.info("Authentication fail: {} {}"
+                        .format(response.status_code, response.text))
             raise KomunitinAuthError(response.text)
         else:
-            logging.error("Error sending auth: {} {}"
-                          .format(response.status_code, response.text))
+            logger.error("Error sending auth: {} {}"
+                         .format(response.status_code, response.text))
             raise KomunitinNetError(response.text, response.status_code)
 
     def _refresh_auth_token(self):
@@ -114,10 +117,10 @@ class ApiAccess:
             self._auth["created"] = int(time.time())
             self.headers = self._make_headers(self._auth['access_token'])
             put_local_data({"user": self.user, "auth": self._auth})
-            logging.debug("Token refreshed")
+            logger.debug("Token refreshed")
         else:
-            logging.warning("Cannot refresh a non-expired token: {} {}".
-                            format(response.status_code, response.text))
+            logger.warning("Cannot refresh a non-expired token: {} {}".
+                           format(response.status_code, response.text))
             raise KomunitinNetError(response.text, response.status_code)
 
     def _make_headers(self, token):

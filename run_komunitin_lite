@@ -59,11 +59,21 @@ if __name__ == "__main__":
     user_local_config = get_user_local_config()
 
     # Logging to local file
-    logging.basicConfig(
-        filename=os.path.join(USER_LOCAL_DIR, 'komunitin_lite.log'),
-        level=getattr(logging, config["logger"].get("logging_level", "ERROR")),
-        format='[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s'
-    )
+    log_level = config["logger"].get("logging_level", "ERROR")
+    logger = logging.getLogger('KomLite')
+    logger.setLevel(getattr(logging, log_level))
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler = logging.FileHandler(
+        os.path.join(USER_LOCAL_DIR, 'komunitin_lite.log'))
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    # console_handler = logging.StreamHandler()
+    # console_handler.setLevel(log_level)
+    # console_handler.setFormatter(formatter)
+    # logger.addHandler(console_handler)
 
     # Install language
     langs_available = get_available_languages(BASE_PATH)

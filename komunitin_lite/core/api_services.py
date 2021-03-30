@@ -1,6 +1,7 @@
 import requests
 import logging
 from datetime import datetime
+import json
 
 from komunitin_lite.core.oauth2 import KomunitinNetError
 
@@ -160,7 +161,7 @@ def check_account(access, group_code, account_code):
 def post_transfer(access, data):
     transfer_url = "{}/accounting/{}/transfers".format(
         access.server["base_api_url"], data["group_code"])
-    params = {
+    payload = {
         "data": {
             "id": data["transaction_id"],
             "type": "transfers",
@@ -185,13 +186,14 @@ def post_transfer(access, data):
             }
         }
     }
-    resp = requests.post(transfer_url, params, headers=access.headers,
-                         timeout=5)
-    if resp.status_code == 200:
+    resp = requests.post(transfer_url, data=json.dumps(payload),
+                         headers=access.headers, timeout=5)
+    if resp.status_code == 201:
         data = resp.json()
         logger.debug("Transfer sent succesfully: {}".format(data))
         return data
     else:
         logger.error("Error sending transfer: {} {}"
                      .format(resp.status_code, resp.text))
+        logger.debug("Transfer final data: {}".format(payload))
         raise KomunitinNetError(resp.text, resp.status_code)

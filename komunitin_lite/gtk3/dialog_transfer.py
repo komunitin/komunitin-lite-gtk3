@@ -121,10 +121,10 @@ class DialogTransfer(Gtk.Dialog):
             self.error_label.set_text(_("Sending transfer") + "...")
             dialog.destroy()
 
-        thread = threading.Thread(
-            target=self.send_transfer, args=(transfer,))
-        thread.daemon = True
-        thread.start()
+            thread = threading.Thread(
+                target=self.send_transfer, args=(transfer,))
+            thread.daemon = True
+            thread.start()
 
     def send_transfer(self, transfer):
         ok, error = transfer.send_transfer(self.parent.access,

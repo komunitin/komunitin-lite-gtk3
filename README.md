@@ -4,6 +4,12 @@ Basic python GTK3 client for komunitin users.
 
 ![Workflow status](https://github.com/XaviP/komunitin-lite-gtk3/workflows/Python_app/badge.svg)
 
+
+**Note: The development of this project is stopped to focus on [Komunitin Lite Qt](https://github.com/komunitin/komunitin_lite_qt), because we think that Qt is a better option for a cross-platform client. This repository remains alive as a form of documentation for the use of the komunitin API rest.**
+
+
+### System dependencies
+
 All dependencies are already installed by default in most current GNU/Linux distributions:
 - python >= 3.7 (with requests, threading, etc...)
 - PyGObject >= 3.36.0
@@ -35,8 +41,6 @@ To uninstall:
 
     pip3 uninstall komunitin_lite
 
-Comming soon: deb package and ppa
-
 To run tests: `python3 -m unittest`
 
 You can develop another UI with the core. See [core/README.md](https://github.com/XaviP/komunitin-lite-gtk3/blob/master/komunitin_lite/core/README.md).
@@ -44,9 +48,7 @@ You can develop another UI with the core. See [core/README.md](https://github.co
 
 #### TODO
 - Transfers pagination
-- Finish and test make transactions
 - Update translations
 - More tests
-- deb package
 - ... 
 
